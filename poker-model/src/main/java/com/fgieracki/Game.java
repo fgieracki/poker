@@ -2,6 +2,8 @@ package com.fgieracki;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.max;
+
 public class Game {
     private Deck deck;
     private final ArrayList<Player> players;
@@ -12,11 +14,9 @@ public class Game {
     private int maxBet;
 
     private int lastPlayerAction;
-    private int ante;
-    private int smallBlindValue = 10;
-    private int bigBlindValue = 20;
+    private final int ante;
     private int dealer;
-    public enum Decision {FOLD, CALL, RAISE, CHECK}
+    public enum Decision {FOLD, CALL, RAISE, CHECK, ALL_IN}
     private final Decision[] playerDecisions = new Decision[4];
 
 
@@ -27,7 +27,7 @@ public class Game {
         pot = 0;
         playerTurn = 0;
         ante = newAnte;
-        dealer = 0;
+        dealer = -1;
     }
 
 
@@ -49,7 +49,12 @@ public class Game {
         this.pot -= pot;
     }
 
-
+    private boolean checkIfPlayerIsPlaying(int playerNumber){
+        if(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK){
+            return false;
+        }
+        return true;
+    }
     //Player management methods
     /**
      * @function addPlayers() - adds a player to the game
@@ -65,16 +70,19 @@ public class Game {
         return players.size();
     }
 
+    public int getLastPlayerAction(){
+        return lastPlayerAction;
+    }
     public void addPlayer(){
         players.add(new Player());
     }
 
     public int getSmallBlindValue(){
-        return smallBlindValue;
+        return 10;
     }
 
     public int getBigBlindValue(){
-        return bigBlindValue;
+        return 20;
     }
 
     public void addPlayer(Player player){
@@ -124,7 +132,10 @@ public class Game {
     }
 
     public void nextPlayerTurn(){
-        playerTurn = (playerTurn + 1) % players.size();
+        do {
+            playerTurn = (playerTurn + 1) % players.size();
+        } while(!checkIfPlayerIsPlaying(playerTurn) && playersPlaying() > 1);
+
     }
     public boolean checkIfPlayersAreReady(){
         for (Player player : players) {
@@ -149,9 +160,10 @@ public class Game {
     }
 
     private void takeAntes(){
-        for (Player player : players) {
-            player.removeChips(ante);
-            addPot(ante);
+        for(int i = 0; i < players.size(); i++){
+            players.get(i).removeChips(ante);
+            playerPots[i] += ante;
+            pot += ante;
         }
     }
 
@@ -179,14 +191,25 @@ public class Game {
             case CALL -> {
                 playerDecisions[playerId] = Decision.CALL;
                 addPot(maxBet - playerPots[playerId]);
+                players.get(playerId).removeChips(maxBet - playerPots[playerId]);
                 playerPots[playerId] = maxBet;
-                lastPlayerAction = playerId;
+//                lastPlayerAction = playerId;
             }
             case RAISE -> {
                 playerDecisions[playerId] = Decision.RAISE;
+                addPot(bet - playerPots[playerId]);
+                players.get(playerId).removeChips(bet - playerPots[playerId]);
+                lastPlayerAction = playerId;
             }
             case CHECK -> {
                 playerDecisions[playerId] = Decision.CHECK;
+            }
+            case ALL_IN -> {
+                playerDecisions[playerId] = Decision.ALL_IN;
+                addPot(players.get(playerId).getChips());
+                playerPots[playerId] += players.get(playerId).getChips();
+                players.get(playerId).removeChips(players.get(playerId).getChips());
+                lastPlayerAction = playerId;
             }
             default -> {
                 playerDecisions[playerId] = Decision.FOLD;
@@ -196,25 +219,33 @@ public class Game {
         }
     }
 
+    public void setPlayerTurn(int playerTurn){
+        this.playerTurn = playerTurn;
+    }
+
+    public int getDealer(){
+        return dealer;
+    }
+
     public int getHighestBet(){
         return maxBet;
     }
 
     public boolean playBlind(int value){
-        if(players.get(playerTurn).getChips() < value){
+        if(players.get(playerTurn).getChips() < value - playerPots[playerTurn]){
             playerDecisions[playerTurn] = Decision.FOLD;
             return false;
         }
-        players.get(playerTurn).removeChips(value);
-        playerPots[playerTurn] += value;
-        pot += value;
-        maxBet = value;
+        players.get(playerTurn).removeChips(value - playerPots[playerTurn]);
+        playerPots[playerTurn] = value;
+        pot += value - playerPots[playerTurn];
+        maxBet = max(maxBet, value);
         lastPlayerAction = playerTurn;
         return true;
     }
 
 
-    private int playersPlaying(){
+    public int playersPlaying(){
         int playersPlaying = 0;
         for (int i = 0; i < players.size(); i++) {
             if(playerDecisions[i] != Decision.FOLD && playerDecisions[i] != Decision.CHECK){

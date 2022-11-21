@@ -1,14 +1,13 @@
 package com.fgieracki;
 
+import java.io.Console;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Server {
     private static final int BUFFER_SIZE = 1024;
@@ -18,6 +17,8 @@ public class Server {
     static int usersCount = 0;
 
     static boolean gameStarted=false;
+    static boolean firstBettingRound =false;
+    static boolean drawRound=false;
 
     private static Game game;
 
@@ -89,18 +90,15 @@ public class Server {
         String message=connectedUsers.get(myClient) + " has joined the game. \nPlayers: "
                 + Integer.toString(usersCount)+"/4\n";
         sendToAllUsers(myClient, message);
-        serverToUser(myClient, "Welcome to the poker game! \n" +
+        sendToUser(myClient, "Welcome to the poker game! \n" +
                 "Type '!ready <starting chips>' to start the game.");
     }
 
     private static void processReadEvent(SelectionKey key)
             throws IOException {
-        // create a ServerSocketChannel to read the request
         SocketChannel myClient = (SocketChannel) key.channel();
 
-//         Set up out 1k buffer to read data into
         ByteBuffer clientResponse = ByteBuffer.allocate(BUFFER_SIZE);
-//        clientResponse.flip();
         myClient.read(clientResponse);
         String data = new String(clientResponse.array()).trim();
 
@@ -129,134 +127,169 @@ public class Server {
 
     private static void validateCommands(SocketChannel Author, String command){
         int playerId = getPlayerId(Author);
+        String[] words = command.split(" ");
         if(command.startsWith("!ready") && !gameStarted) {
             int chips = 0;
             //check if chips number is valid
             try{
                 chips = Integer.parseInt(command.substring(7));
             } catch (NumberFormatException e){
-                serverToUser(Author, "Invalid number of chips! Try again.");
+                sendToUser(Author, "Invalid number of chips! Try again.");
                 return;
             }
             if(chips > 20){
                 game.getPlayer(playerId).setChips(chips);
                 game.getPlayer(playerId).setReady(true);
-                serverToUser(Author, "You are ready to play!");
+                sendToUser(Author, "You are ready to play!");
                 sendToAllUsers(Author, "Player " + Integer.toString(playerId+1) + " is ready to play!");
                 try {
-                    tryToStartGame();
+                    startGame();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
             else{
-                serverToUser(Author, "Invalid number of chips! Try again.");
+                sendToUser(Author, "Invalid number of chips! Try again.");
             }
+        } else if(command.startsWith("!hand")){
+            sendToUser(Author, game.getPlayer(playerId).getHand());
+        } else if(command.startsWith("!info")){
+            sendToUser(Author, getPlayerInfo(playerId));
+        } else if(command.startsWith("!turn")){
+            sendToUser(Author, "Current turn: Player " + Integer.toString(game.getPlayerTurn()+1) );
+        } else if(command.startsWith("!bet") && firstBettingRound){
+            if(game.getPlayerTurn() != getPlayerId(Author)){
+                sendToUser(Author, "It's not your turn!");
+            } else{
+                playerBet(Author, words);
 
-            if(command.startsWith("!hand")){
-                serverToUser(Author, game.getPlayer(playerId).getHand());
-            }
-
-            if(command.startsWith("!info")){
-                serverToUser(Author, getPlayerInfo(playerId));
-            }
-
-            if(command.startsWith("!turn")){
-                serverToUser(Author, "Current turn: Player " + Integer.toString(game.getPlayerTurn()+1) );
-            }
-
-            if(command.startsWith("!play")){
-                if(game.getPlayerTurn() != getPlayerId(Author)){
-                    serverToUser(Author, "It's not your turn!");
-                }
-                else{
-                    //extract words from command
-                    String[] words = command.split(" ");
-                    playerMove(playerId, words);
+                if(game.getPlayerTurn() == game.getLastPlayerAction()){
+                    firstBettingRound = false;
+                    game.setPlayerTurn(game.getDealer()-1);
+                    sendToAllUsers(Author, "First betting round finished!\nStarting drawing round...");
+                    sendToAllUsers(Author, "Current turn: Player " + Integer.toString(game.getPlayerTurn()+1) );
+                    drawRound = true;
                 }
             }
+        }
+        else if(command.startsWith("!help")){
+            //TODO: add help
         }
 
     }
 
-    private static void playerMove(int playerId, String[] words){
+
+    private static void playerBet(SocketChannel author, String[] words){
+        int playerId = getPlayerId(author);
         if(words.length == 1){
-            serverToUser(getUserByPlayerId(playerId), "Invalid command! Try again.");
+            sendToUser(author, "Invalid command! Try again.");
         }
         else{
-            if(words[1].equals("check")){
-                game.bet(playerId, Game.Decision.CHECK, 0);
-            }
-            else if(words[1].equals("fold")){
-                game.bet(playerId, Game.Decision.FOLD, 0);
-            }
-            else if(words[1].equals("call")){
-                if(game.getHighestBet() - game.getPlayerPot(playerId) < game.getPlayerChips(playerId)){
-                    game.bet(playerId, Game.Decision.CALL, 0);
-                }
-                else{
-                    serverToUser(getUserByPlayerId(playerId), "You don't have to call!");
-                }
-                game.bet(playerId, Game.Decision.CALL, 0);
-            }
-            else if(words[1].equals("raise")){
-                if(words.length == 3){
-                    try{
-                        int raise = Integer.parseInt(words[2]);
-                        if(raise > game.getHighestBet()
-                                && ( raise - game.getPlayerPot(playerId) <= game.getPlayerChips(playerId)) ){
-                            game.bet(playerId, Game.Decision.RAISE, raise);
-                        }
-                        else{
-                            serverToUser(getUserByPlayerId(playerId), "Invalid raise! Try again.");
-                        }
-                    } catch (NumberFormatException e){
-                        serverToUser(getUserByPlayerId(playerId), "Invalid number! Try again.");
+            switch (words[1]) {
+                case "check":
+                    game.bet(playerId, Game.Decision.CHECK, 0);
+                    sendToAllUsers(author, "Player " + Integer.toString(playerId+1) + " checked.");
+                    nextTurn();
+                    break;
+                case "fold":
+                    game.bet(playerId, Game.Decision.FOLD, 0);
+                    sendToAllUsers(author, "Player " + Integer.toString(playerId+1) + " folded.");
+                    nextTurn();
+                    break;
+                case "call":
+                    if (game.getHighestBet() - game.getPlayerPot(playerId) < game.getPlayerChips(playerId)) {
+                        game.bet(playerId, Game.Decision.CALL, 0);
+                        sendToAllUsers(author, "Player " + Integer.toString(playerId+1) + " called.");
+                        nextTurn();
+                    } else {
+                        sendToUser(author, "You don't have enough chips to call!");
                     }
-                }
-                else{
-                    serverToUser(getUserByPlayerId(playerId), "Invalid command! Try again.");
-                }
-            }
-            else{
-                serverToUser(getUserByPlayerId(playerId), "Invalid command! Try again.");
+                    break;
+                case "raise":
+                    if (words.length == 3) {
+                        try {
+                            int raise = Integer.parseInt(words[2]);
+                            if (raise > game.getHighestBet()
+                                    && (raise - game.getPlayerPot(playerId) <= game.getPlayerChips(playerId))) {
+                                game.bet(playerId, Game.Decision.RAISE, raise);
+                                sendToAllUsers(author, "Player " + Integer.toString(playerId+1) + " raised to " + Integer.toString(raise) + ".");
+                                nextTurn();
+                            } else {
+                                sendToUser(author, "Invalid raise! Try again.");
+                            }
+                        } catch (NumberFormatException e) {
+                            sendToUser(author, "Invalid number! Try again.");
+                        }
+                    } else {
+                        sendToUser(author, "Invalid command! Try again.");
+                    }
+                    break;
+                case "allin":
+                    game.bet(playerId, Game.Decision.ALL_IN, 0);
+                    sendToAllUsers(author, "Player " + Integer.toString(playerId+1) + " went all in.");
+                    nextTurn();
+                    break;
+                default:
+                    sendToUser(author, "Invalid command! Try again.");
+                    break;
             }
         }
     }
 
-    private static void tryToStartGame() throws InterruptedException {
+    private static void startGame() throws InterruptedException {
         if(!gameStarted && game.checkIfPlayersAreReady() && usersCount >= 2){
             gameStarted = true;
             game.startRound();
+            firstBettingRound = true;
             sendToAllUsers(null, "Game started!\n");
-            sendToAllUsers(null, "Game starts from Player "
-                    + Integer.toString(game.getDealerId()+1) + "\n");
             sendPlayerInfoToUsers();
-            game.nextPlayerTurn();
-            while(!game.playBlind(game.getSmallBlindValue())){
-                game.bet(game.getPlayerTurn(), Game.Decision.FOLD, 0);
-                serverToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())),
-                        "You have been eliminated!");
-                game.nextPlayerTurn();
-            }
-            sendToAllUsers(null, "Small blind: " + Integer.toString(game.getSmallBlindValue())
-                    + " has been played by: Player " + Integer.toString(game.getPlayerTurn()+1) + "\n");
-            game.nextPlayerTurn();
-            while(!game.playBlind(game.getBigBlindValue())){
-                game.bet(game.getPlayerTurn(), Game.Decision.FOLD, 0);
-                serverToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())),
-                        "You have been eliminated!");
-                game.nextPlayerTurn();
-            }
-            sendToAllUsers(null, "Big blind: " + Integer.toString(game.getBigBlindValue())
-                    + " has been played by: Player " + Integer.toString(game.getPlayerTurn()+1) + "\n");
-            game.nextPlayerTurn();
+            sendToAllUsers(getUserByPlayerId(game.getDealerId()), "Dealer: Player "
+                    + Integer.toString(game.getDealerId()+1) + "\n");
+            sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getDealerId())), "Game starts from you!\n");
+
+            nextTurn();
+
+            playSmallBlind();
+            nextTurn();
+            playBigBlind();
+            nextTurn();
         }
     }
 
+
+
+    private static void playSmallBlind(){
+        while(!game.playBlind(game.getSmallBlindValue())){
+            game.bet(game.getPlayerTurn(), Game.Decision.FOLD, 0);
+            sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())),
+                    "You have been eliminated!");
+            nextTurn();
+        }
+        sendToAllUsers(null, "Small blind: " + Integer.toString(game.getSmallBlindValue())
+                + " has been played by: Player " + Integer.toString(game.getPlayerTurn()+1) + "\n");
+    }
+
+    private static void playBigBlind(){
+        while(!game.playBlind(game.getBigBlindValue())){
+            game.bet(game.getPlayerTurn(), Game.Decision.FOLD, 0);
+            sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())),
+                    "You have been eliminated!");
+            nextTurn();
+        }
+        sendToAllUsers(null, "Big blind: " + Integer.toString(game.getBigBlindValue())
+                + " has been played by: Player " + Integer.toString(game.getPlayerTurn()+1) + "\n");
+    }
+
+    private static void nextTurn(){
+        System.out.println("Game started!");
+        game.nextPlayerTurn();
+        sendToAllUsers(getUserByPlayerId(game.getPlayerTurn()), "Current turn: Player "
+                + Integer.toString(game.getPlayerTurn()+1) + "\n");
+        sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())), "Your turn!");
+    }
     private static void sendPlayerInfoToUsers(){
         connectedUsers.forEach((key, value) -> {
-            serverToUser(key, getPlayerInfo(getPlayerId(key)));
+            sendToUser(key, getPlayerInfo(getPlayerId(key)));
         });
     }
     private static String getPlayerInfo(int playerId){
@@ -280,7 +313,7 @@ public class Server {
         });
     }
 
-    private static void serverToUser(SocketChannel user, String message){
+    private static void sendToUser(SocketChannel user, String message){
         String finalMessage= message + "\n";
         try {
             ByteBuffer serverResponse = ByteBuffer.wrap(finalMessage.getBytes());
