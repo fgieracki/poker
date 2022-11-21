@@ -30,11 +30,8 @@ public class Client {
             new Thread(server).start();
             while(true){
                 String inputString=keyboardReader.readLine();
-                ByteBuffer myBuffer=ByteBuffer.allocate(BUFFER_SIZE);
-                myBuffer.put(inputString.getBytes());
-                myBuffer.flip();
+                ByteBuffer myBuffer=ByteBuffer.wrap(inputString.getBytes());
                 myClient.write(myBuffer);
-                myBuffer.clear();
                 if(inputString.equals("exit"))break;
             }
 

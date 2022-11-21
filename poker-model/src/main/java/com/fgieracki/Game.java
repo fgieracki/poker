@@ -16,7 +16,7 @@ public class Game {
     private int smallBlindValue = 10;
     private int bigBlindValue = 20;
     private int dealer;
-    private enum Decision {FOLD, CALL, RAISE, CHECK}
+    public enum Decision {FOLD, CALL, RAISE, CHECK}
     private final Decision[] playerDecisions = new Decision[4];
 
 
@@ -69,6 +69,14 @@ public class Game {
         players.add(new Player());
     }
 
+    public int getSmallBlindValue(){
+        return smallBlindValue;
+    }
+
+    public int getBigBlindValue(){
+        return bigBlindValue;
+    }
+
     public void addPlayer(Player player){
         players.add(player);
     }
@@ -80,17 +88,6 @@ public class Game {
     public int getPlayerPot(int index){
         return playerPots[index];
     }
-//    public void showPlayers(){
-//        for (Player player : players) {
-//            player.showHand();
-//        }
-//    }
-
-//    public void showPlayersChips(){
-//        for (int i = 0; i < players.size(); i++) {
-//            System.out.println("Player " + i + " has " + players.get(i).getChips() + " chips");
-//        }
-//    }
 
     public void setPlayerChips(int playerId, int chips){
         players.get(playerId).setChips(chips);
@@ -110,6 +107,10 @@ public class Game {
 
     public int getPlayerChips(int playerId){
         return players.get(playerId).chips;
+    }
+
+    public int getDealerId(){
+        return dealer;
     }
 
     public void removePlayersChips(int chips){
@@ -133,14 +134,6 @@ public class Game {
         }
         return true;
     }
-
-
-//    public void showPlayersHandValue(){
-//        for (int i = 0; i < players.size(); i++) {
-//            System.out.println("Player " + i + " has " + players.get(i).getHandValue().countHandValue() + " hand value");
-//        }
-//    }
-
     public HandValue getPlayerHandValue(int playerId){
         return players.get(playerId).getHandValue();
     }
@@ -181,27 +174,6 @@ public class Game {
         playerTurn = dealer;
     }
 
-    public void play(){
-        smallBlind();
-        bigBlind();
-        while(playerTurn != lastPlayerAction && playersPlaying() > 1){
-            if( playerDecisions[playerTurn] != Decision.FOLD &&
-                    playerDecisions[playerTurn] != Decision.CHECK)
-                bet(playerTurn);
-            playerTurn = (playerTurn + 1) % players.size();
-        }
-
-        //compare hands
-        //iterator through playing players
-
-        //show winner
-        //give chips
-
-
-        //betting round
-
-    }
-
     public void bet(int playerId, Decision decision, int bet){
         switch (decision) {
             case CALL -> {
@@ -224,111 +196,23 @@ public class Game {
         }
     }
 
-    private void bet(int playerId){
-        int decision = 0;
-        int bet = 0;
-        int playerChips = players.get(playerId).getChips();
-        System.out.println("Actual bet: " + maxBet);
-        System.out.println("Player " + playerId + " has " + playerChips + " chips");
-        System.out.println("Player " + playerId + " has " + playerPots[playerId] + " in the pot");
-        System.out.println("Player " + playerId + " has " + players.get(playerId).getHandValue().countHandValue() + " hand value");
-        System.out.println("Player " + playerId + " turn");
-        System.out.println("Player " + playerId + " possible decisions: ");
-        System.out.println("1. Fold");
-        System.out.println("2. Call");
-        System.out.println("3. Raise");
-        System.out.println("4. Check");
-        System.out.println("Player " + playerId + " decision: ");
-
-        switch (decision) {
-            case 1 -> playerDecisions[playerId] = Decision.FOLD;
-            case 2 -> {
-                playerDecisions[playerId] = Decision.CALL;
-                lastPlayerAction = playerId;
-                players.get(playerId).removeChips(maxBet - playerPots[playerId]);
-                playerPots[playerId] = maxBet;
-            }
-            case 3 -> {
-                playerDecisions[playerId] = Decision.RAISE;
-                System.out.println("Player " + playerId + " raise: ");
-                bet = Integer.parseInt(System.console().readLine());
-                while (bet < 2 * maxBet || bet > playerChips) {
-                    System.out.println("Wrong input");
-                    System.out.println("Player " + playerId + " raise: ");
-                    bet = Integer.parseInt(System.console().readLine());
-                }
-                players.get(playerId).removeChips(bet - playerPots[playerId]);
-                playerPots[playerId] += bet;
-                lastPlayerAction = playerId;
-            }
-            case 4 -> playerDecisions[playerId] = Decision.CHECK;
-            default -> playerDecisions[playerId] = Decision.FOLD;
-        }
+    public int getHighestBet(){
+        return maxBet;
     }
 
-    private void playerDecision(int playerId){
-        int decision = Integer.parseInt(System.console().readLine());
-        while(decision < 1 || decision > 4){
-            System.out.println("Wrong input, enter valid decision");
-            System.out.println("Player " + playerId + " decision: ");
-            decision = Integer.parseInt(System.console().readLine());
-        }
-        switch (decision){
-            case 1 -> playerDecisions[playerId] = Decision.FOLD;
-            case 2 -> {
-                if(players.get(playerId).getChips() >= maxBet - playerPots[playerId]){
-                    playerDecisions[playerId] = Decision.CALL;
-                    lastPlayerAction = playerId;
-                    players.get(playerId).removeChips(maxBet - playerPots[playerId]);
-                    playerPots[playerId] = maxBet;
-                }
-                else{
-                    System.out.println("Player " + playerId + " doesn't have enough chips to call");
-                    playerDecision(playerId);
-                }
-            }
-            case 3 -> {
-                playerDecisions[playerId] = Decision.RAISE;
-                System.out.println("Player " + playerId + " raise: ");
-                int bet = Integer.parseInt(System.console().readLine());
-                while(bet < 2 * maxBet || bet > players.get(playerId).getChips()){
-                    System.out.println("Wrong input");
-                    System.out.println("Player " + playerId + " raise: ");
-                    bet = Integer.parseInt(System.console().readLine());
-                }
-                players.get(playerId).removeChips(bet - playerPots[playerId]);
-                playerPots[playerId] += bet;
-                lastPlayerAction = playerId;
-            }
-
-        }
-    }
-
-    public boolean smallBlind(){
-        playerTurn = (playerTurn + 1) % players.size();
-        if(players.get(playerTurn).getChips() < smallBlindValue){
+    public boolean playBlind(int value){
+        if(players.get(playerTurn).getChips() < value){
             playerDecisions[playerTurn] = Decision.FOLD;
             return false;
         }
-        players.get(playerTurn).removeChips(smallBlindValue);
-        playerPots[playerTurn] += smallBlindValue;
-        pot += smallBlindValue;
-        maxBet = smallBlindValue;
+        players.get(playerTurn).removeChips(value);
+        playerPots[playerTurn] += value;
+        pot += value;
+        maxBet = value;
+        lastPlayerAction = playerTurn;
         return true;
     }
 
-    public boolean bigBlind(){
-        playerTurn = (playerTurn + 1) % players.size();
-        if(players.get(playerTurn).getChips() < bigBlindValue){
-            playerDecisions[playerTurn] = Decision.FOLD;
-            return false;
-        }
-        players.get(playerTurn).removeChips(bigBlindValue);
-        playerPots[playerTurn] += bigBlindValue;
-        pot += bigBlindValue;
-        maxBet = bigBlindValue;
-        return true;
-    }
 
     private int playersPlaying(){
         int playersPlaying = 0;
@@ -339,12 +223,4 @@ public class Game {
         }
         return playersPlaying;
     }
-
-
-//    public void showDeck(){
-//        deck.showDeck();
-//    }
-
-
-
 }

@@ -24,21 +24,25 @@ public class ServerConnection implements Runnable{
     }
     @Override
     public void run() {
-        ByteBuffer serverResponse=ByteBuffer.allocate(BUFFER_SIZE);
-        while(true){
+        try {
+            while(true){
+                ByteBuffer serverResponse=ByteBuffer.allocate(BUFFER_SIZE);
 
-            try {
-                serverSocket.read(serverResponse);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            String data = new String(serverResponse.array()).trim();
-            if(data.length()>0){
+                int test = serverSocket.read(serverResponse);
+
+                if(test == -1){
+                    System.out.println("Server disconnected");
+                    break;
+                }
+
+                serverResponse.flip();
+                String data = new String(serverResponse.array()).trim();
                 System.out.println(String.format("Server: %s",data));
+//                serverResponse.clear();
+
             }
-            serverResponse.clear();
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
     }
 }
