@@ -1,0 +1,8 @@
+
+‹
+java:S1319:"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(èÐ¥×øÿÿÿÿ
+>
+java:S21404")Use "java.util.Random.nextInt()" instead.(î¼å
+X	java:S125B"<This block of commented-out lines of code should be removed.(‚äÌš8ÂÀ”«É0
+[
+java:S1155R">Use isEmpty() to check whether the collection is empty or not.(¥™“ 8Ù¿Ë¸É0

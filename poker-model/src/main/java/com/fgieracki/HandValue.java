@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class HandValue {
     private int value;
-    private ArrayList<Card> hand;
+    private final ArrayList<Card> hand;
 
     public HandValue(ArrayList<Card> hand){
         this.hand = hand;
@@ -70,23 +70,19 @@ public class HandValue {
 
     //check for four of a kind
     private boolean isFourOfAKind(){
-        if(hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank()){
-            return true;
-        }
-        else if(hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank()){
-            return true;
-        }
-        return false;
+         return ((hand.get(0).getRank() == hand.get(1).getRank()
+                && hand.get(1).getRank() == hand.get(2).getRank()
+                && hand.get(2).getRank() == hand.get(3).getRank()) ||
+                (hand.get(1).getRank() == hand.get(2).getRank()
+                        && hand.get(2).getRank() == hand.get(3).getRank()
+                        && hand.get(3).getRank() == hand.get(4).getRank()));
     }
 
     //check for full house
     private boolean isFullHouse(){
-        if((hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank()) ||
-                (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank())){
-            return true;
+            return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank()) ||
+                    (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
         }
-        return false;
-    }
 
     //check for flush
     private boolean isFlush() {
@@ -110,43 +106,24 @@ public class HandValue {
 
     //check for three of a kind
     private boolean isThreeOfAKind(){
-        if(hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank()){
-            return true;
-        }
-        else if(hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank()){
-            return true;
-        }
-        else if(hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank()){
-            return true;
-        }
-        return false;
+        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank()) ||
+                (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank()) ||
+                (hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
     }
 
     //check for two pairs
     private boolean isTwoPairs(){
-        if((hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank()) ||
+        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank()) ||
                 (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(3).getRank() == hand.get(4).getRank()) ||
-                (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank())){
-            return true;
-        }
-        return false;
+                (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
     }
 
     //check for one pair
     private boolean isOnePair(){
-        if(hand.get(0).getRank() == hand.get(1).getRank()){
-            return true;
-        }
-        else if(hand.get(1).getRank() == hand.get(2).getRank()){
-            return true;
-        }
-        else if(hand.get(2).getRank() == hand.get(3).getRank()){
-            return true;
-        }
-        else if(hand.get(3).getRank() == hand.get(4).getRank()){
-            return true;
-        }
-        return false;
+         return ((hand.get(0).getRank() == hand.get(1).getRank()) ||
+                (hand.get(1).getRank() == hand.get(2).getRank()) ||
+                (hand.get(2).getRank() == hand.get(3).getRank()) ||
+                (hand.get(3).getRank() == hand.get(4).getRank()));
     }
 
     public int getHighestCard(){

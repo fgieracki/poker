@@ -73,14 +73,12 @@ public class Card {
         this.suit = suit;
     }
 
-
     /**
-     * @return string representation of the card
+     * @function showCard() - shows the card
      */
-    public void showCard(){
-        System.out.println(rank + " " + suit);
-    }
-
+//    public void showCard(){
+//        System.out.println(rank + " " + suit);
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -95,45 +93,33 @@ public class Card {
         return Objects.hash(rank, suit);
     }
 
+    @Override
+    public String toString(){
+        return "[" + rankToString() + " " + suitToString() + "]";
+    }
 
     //convert rank to string
     public String rankToString(){
-        switch (rank){
-            case 14:
-                return "Ace";
-            case 13:
-                return "King";
-            case 12:
-                return "Queen";
-            case 11:
-                return "Jack";
-            default:
-                return Integer.toString(rank);
-        }
+        return switch (rank) {
+            case 14 -> "Ace";
+            case 13 -> "King";
+            case 12 -> "Queen";
+            case 11 -> "Jack";
+            default -> Integer.toString(rank);
+        };
     }
 
     public String suitToString(){
-        switch (suit){
-            case 0:
-                return "Spades";
-            case 1:
-                return "Hearts";
-            case 2:
-                return "Diamonds";
-            case 3:
-                return "Clubs";
-            default:
-                return Integer.toString(suit);
-        }
+        return switch (suit) {
+            case 0 -> "Spades";
+            case 1 -> "Hearts";
+            case 2 -> "Diamonds";
+            case 3 -> "Clubs";
+            default -> Integer.toString(suit);
+        };
     }
 
     public int descendingCompare(Card card) {
-        if (this.rank > card.rank) {
-            return -1;
-        } else if (this.rank < card.rank) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(card.rank, this.rank);
     }
 }

@@ -1,0 +1,15 @@
+
+g	java:S112!"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ÌË½ŠÉ0
+D
+java:S2189""Add an end condition to this loop.(˜ïˆÿÿÿÿÿ8ÕË½ŠÉ0
+
+java:S1130"qRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from constructor's body.(’Ñ¶8ÚË½ŠÉ0
+U	java:S106%"9Replace this use of System.out or System.err by a logger.(æ»Ö8ŞË½ŠÉ0
+S
+java:S1128"6Remove this unused import 'java.io.InputStreamReader'.(ãˆÎÉ8ßË½ŠÉ0
+M
+java:S1128"0Remove this unused import 'java.io.PrintWriter'.(ÓŞÏÛ8ßË½ŠÉ0
+I
+java:S1128",Remove this unused import 'java.net.Socket'.(­‡àú8ßË½ŠÉ0
+C
+java:S1068"&Remove this unused "in" private field.(»ğ¶ü8ßË½ŠÉ0

@@ -19,21 +19,36 @@ import java.util.ArrayList;
 public class Player{
     ArrayList<Card> hand;
     int chips;
+    boolean isReady;
 
 
     public Player(){
-        hand = new ArrayList<Card>();
+        hand = new ArrayList<>();
+        isReady = false;
     }
 
 
+    public String getHand(){
+        String handString = "{";
+        for (Card card : hand){
+            handString += card.toString() + ", ";
+        }
+        //replace last comma with curly bracket
+        handString = handString.substring(0, handString.length() - 2) + "}";
+        return handString;
+    }
+
+    public void setReady(boolean value){
+        isReady = value;
+    }
     /**
      * @function showHand() - shows the hand
      */
-    public void showHand(){
-        for (int i = 0; i < hand.size(); i++) {
-            hand.get(i).showCard();
-        }
-    }
+//    public void showHand(){
+//        for (Card card : hand) {
+//            card.showCard();
+//        }
+//    }
 
     /**
      * @function getFiveCards() - gets five cards from the deck

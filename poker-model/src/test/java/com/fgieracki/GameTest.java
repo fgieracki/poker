@@ -8,7 +8,7 @@ class GameTest {
 
     @Test
     void startGame() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayers(2);
         game.startRound();
         assertEquals(2, game.getPlayerAmount());
@@ -16,7 +16,7 @@ class GameTest {
 
     @Test
     void addPlayers() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayers(3);
         assertEquals(3, game.getPlayerAmount());
 
@@ -24,28 +24,28 @@ class GameTest {
 
     @Test
     void addPlayer() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayer();
         assertEquals(1, game.getPlayerAmount());
     }
 
     @Test
     void testAddPlayer() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayer(new Player());
         assertEquals(1, game.getPlayerAmount());
     }
 
     @Test
     void addPot() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPot(100);
         assertEquals(100, game.getPot());
     }
 
     @Test
     void removePot() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPot(100);
         game.removePot(50);
         assertEquals(50, game.getPot());
@@ -53,7 +53,7 @@ class GameTest {
 
     @Test
     void setPlayersChips() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayer();
         game.setPlayersChips(100);
         assertEquals(100, game.getPlayerChips(0));
@@ -61,7 +61,7 @@ class GameTest {
 
     @Test
     void addPlayersChips() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayer();
         game.addPlayersChips(100);
         assertEquals(100, game.getPlayerChips(0));
@@ -69,7 +69,7 @@ class GameTest {
 
     @Test
     void removePlayersChips() {
-        Game game = new Game();
+        Game game = new Game(5);
         game.addPlayer();
         game.addPlayersChips(100);
         game.removePlayersChips(50);

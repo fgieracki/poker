@@ -28,12 +28,12 @@ import java.util.ArrayList;
  */
 
 public class Deck {
-    private ArrayList<Card> cards;
+    private final ArrayList<Card> cards;
 
     //default constructor
     public Deck() {
         //create cards
-        cards = new ArrayList<Card>();
+        cards = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             for (int j = 2; j < 15; j++) {
                 cards.add(new Card(j, i));
@@ -63,11 +63,11 @@ public class Deck {
     /**
      * @function showDeck() - shows the deck
      */
-    public void showDeck(){
-        for (int i = 0; i < cards.size(); i++) {
-            System.out.println(cards.get(i).getRank() + " " + cards.get(i).getSuit());
-        }
-    }
+//    public void showDeck(){
+//        for (int i = 0; i < cards.size(); i++) {
+//            System.out.println(cards.get(i).getRank() + " " + cards.get(i).getSuit());
+//        }
+//    }
 
     public int deckSize(){
         return cards.size();
