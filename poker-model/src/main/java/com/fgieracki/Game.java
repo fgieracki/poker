@@ -16,6 +16,7 @@ public class Game {
     private int lastPlayerAction;
     private final int ante;
     private int dealer;
+    private int drawCounter = 0;
     public enum Decision {FOLD, CALL, RAISE, CHECK, ALL_IN}
     private final Decision[] playerDecisions = new Decision[4];
 
@@ -50,10 +51,7 @@ public class Game {
     }
 
     private boolean checkIfPlayerIsPlaying(int playerNumber){
-        if(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK){
-            return false;
-        }
-        return true;
+        return !(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK);
     }
     //Player management methods
     /**
@@ -64,6 +62,85 @@ public class Game {
         for (int i = 0; i < amount; i++) {
             players.add(new Player());
         }
+    }
+
+    public int[]getWinners(){
+        int[] winners = handleWinners();
+        splitPot(winners);
+        return winners;
+    }
+
+    private void splitPot(int[] winners){
+        int splitPot = pot/winners.length;
+        for (int winner : winners) {
+            players.get(winner).addChips(splitPot);
+        }
+    }
+
+    private int[] handleWinners(){
+        int[] winners = basicWinnerSelection();
+        if(winners.length == 1){
+            return winners;
+        }
+        else{
+            return tieBreaker(winners);
+        }
+    }
+
+    private int[] tieBreaker(int[] winners){
+        int[] newWinners = new int[winners.length];
+        int winnersAmount = 1;
+        int bestPlayer = winners[0];
+        newWinners[0] = bestPlayer;
+        for(int i = 1; i < winners.length; i++){
+            boolean swapped = false;
+            for(int cardId = 0; cardId < 5; cardId++){
+                if(players.get(bestPlayer).getHandValue().getNthHighestCard(cardId) < players.get(winners[i]).getHandValue().getNthHighestCard(cardId)){
+                    swapped = true;
+                    bestPlayer = winners[i];
+                    winnersAmount = 0;
+                    newWinners[winnersAmount] = bestPlayer;
+                    winnersAmount++;
+                    break;
+                }
+                else if(players.get(bestPlayer).getHandValue().getNthHighestCard(cardId) > players.get(winners[i]).getHandValue().getNthHighestCard(cardId)){
+                    swapped = true;
+                    break;
+                }
+            }
+            if(!swapped){
+                newWinners[winnersAmount] = winners[i];
+                winnersAmount++;
+            }
+        }
+        int[] finalWinners = new int[winnersAmount];
+        System.arraycopy(newWinners, 0, finalWinners, 0, winnersAmount);
+        return finalWinners;
+    }
+
+
+    private int[] basicWinnerSelection(){
+        int[] winners = new int[4];
+        int winnersAmount = 0;
+        int maxHandValue = 0;
+        for (int i = 0; i < players.size(); i++) {
+            if(checkIfPlayerIsPlaying(i)){
+                int handValue = players.get(i).getHandValue().countHandValue();
+                if(handValue > maxHandValue){
+                    maxHandValue = handValue;
+                    winnersAmount = 0;
+                    winners[winnersAmount] = i;
+                    winnersAmount = 1;
+                }
+                else if(handValue == maxHandValue){
+                    winners[winnersAmount] = i;
+                    winnersAmount++;
+                }
+            }
+        }
+        int[] winnersFinal = new int[winnersAmount];
+        System.arraycopy(winners, 0, winnersFinal, 0, winnersAmount);
+        return winnersFinal;
     }
 
     public int getPlayerAmount(){
@@ -117,7 +194,7 @@ public class Game {
         return players.get(playerId).chips;
     }
 
-    public int getDealerId(){
+    public int getDealer(){
         return dealer;
     }
 
@@ -129,6 +206,10 @@ public class Game {
 
     public int getPlayerTurn(){
         return playerTurn;
+    }
+
+    public Deck getDeck(){
+        return deck;
     }
 
     public void nextPlayerTurn(){
@@ -145,18 +226,16 @@ public class Game {
         }
         return true;
     }
-    public HandValue getPlayerHandValue(int playerId){
-        return players.get(playerId).getHandValue();
-    }
-
-
-
 
 
     public void startRound(){
         prepareGame();
         dealCards();
         takeAntes();
+    }
+
+    public void setLastPlayerAction(int playerNumber){
+        lastPlayerAction = playerNumber;
     }
 
     private void takeAntes(){
@@ -183,6 +262,7 @@ public class Game {
         deck = new Deck();
         deck.shuffle();
         pot = 0;
+        drawCounter = 0;
         playerTurn = dealer;
     }
 
@@ -193,38 +273,41 @@ public class Game {
                 addPot(maxBet - playerPots[playerId]);
                 players.get(playerId).removeChips(maxBet - playerPots[playerId]);
                 playerPots[playerId] = maxBet;
-//                lastPlayerAction = playerId;
             }
             case RAISE -> {
                 playerDecisions[playerId] = Decision.RAISE;
                 addPot(bet - playerPots[playerId]);
+                maxBet = bet;
                 players.get(playerId).removeChips(bet - playerPots[playerId]);
                 lastPlayerAction = playerId;
             }
-            case CHECK -> {
+            case CHECK ->
                 playerDecisions[playerId] = Decision.CHECK;
-            }
+
             case ALL_IN -> {
                 playerDecisions[playerId] = Decision.ALL_IN;
                 addPot(players.get(playerId).getChips());
                 playerPots[playerId] += players.get(playerId).getChips();
+                maxBet = playerPots[playerId];
                 players.get(playerId).removeChips(players.get(playerId).getChips());
                 lastPlayerAction = playerId;
             }
-            default -> {
+            default ->
                 playerDecisions[playerId] = Decision.FOLD;
-            }
 
 
         }
     }
 
+
+    public void addDraw(){
+        drawCounter++;
+    }
+    public int getDrawCounter(){
+        return drawCounter;
+    }
     public void setPlayerTurn(int playerTurn){
         this.playerTurn = playerTurn;
-    }
-
-    public int getDealer(){
-        return dealer;
     }
 
     public int getHighestBet(){

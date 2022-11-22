@@ -73,13 +73,6 @@ public class Card {
         this.suit = suit;
     }
 
-    /**
-     * @function showCard() - shows the card
-     */
-//    public void showCard(){
-//        System.out.println(rank + " " + suit);
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

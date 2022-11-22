@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  * Deck class
  *
- * @param cards - array of cards
+ *      cards - array of cards
  *              52 cards in the deck
  *              13 cards of each suit
  *              4 suits
@@ -59,16 +59,6 @@ public class Deck {
         return cards;
     }
 
-
-    /**
-     * @function showDeck() - shows the deck
-     */
-//    public void showDeck(){
-//        for (int i = 0; i < cards.size(); i++) {
-//            System.out.println(cards.get(i).getRank() + " " + cards.get(i).getSuit());
-//        }
-//    }
-
     public int deckSize(){
         return cards.size();
     }
@@ -79,11 +69,12 @@ public class Deck {
      * @return top card of the deck
      */
     public Card getTopCard(){
-        if(cards.size() == 0) return null;
+        if(cards.isEmpty()) return null;
         Card topCard = cards.get(0);
         cards.remove(0);
         return topCard;
     }
+
 
 
     /**

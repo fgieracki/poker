@@ -28,7 +28,7 @@ public class Player{
     }
 
 
-    public String getHand(){
+    public String getHandToString(){
         String handString = "{";
         for (Card card : hand){
             handString += card.toString() + ", ";
@@ -38,18 +38,14 @@ public class Player{
         return handString;
     }
 
+
     public void setReady(boolean value){
         isReady = value;
     }
-    /**
-     * @function showHand() - shows the hand
-     */
-//    public void showHand(){
-//        for (Card card : hand) {
-//            card.showCard();
-//        }
-//    }
 
+    public void replaceCard(int index, Card card){
+        hand.set(index, card);
+    }
     /**
      * @function getFiveCards() - gets five cards from the deck
      * @param deck - deck of cards

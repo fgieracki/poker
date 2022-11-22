@@ -54,18 +54,12 @@ public class HandValue {
 
     //check for royal flush
     private boolean isRoyalFlush(){
-        if(isFlush() && isStraight() && hand.get(0).getRank() == 14){
-            return true;
-        }
-        return false;
+        return (isFlush() && isStraight() && hand.get(0).getRank() == 14);
     }
 
     //check for straight flush
     private boolean isStraightFlush(){
-        if(isFlush() && isStraight()){
-            return true;
-        }
-        return false;
+        return (isFlush() && isStraight());
     }
 
     //check for four of a kind
@@ -128,5 +122,9 @@ public class HandValue {
 
     public int getHighestCard(){
         return hand.get(0).getRank();
+    }
+
+    public int getNthHighestCard(int n){
+        return hand.get(n).getRank();
     }
 }
