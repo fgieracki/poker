@@ -125,6 +125,29 @@ public class Server {
         }
     }
 
+    private static void validateCommands(SocketChannel client, String command) {
+        int playerId = getPlayerId(client);
+        String[] words = command.split(" ");
+        if (command.startsWith("!ready") && !gameStarted) {
+            handleReadyCommand(client, words);
+        } else if (command.startsWith("!hand")) {
+            sendToUser(client, game.getPlayer(playerId).getHandToString());
+        } else if (command.startsWith("!info")) {
+            sendToUser(client, getPlayerInfo(playerId));
+        } else if (command.startsWith("!turn")) {
+            sendToUser(client, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
+        } else if (command.startsWith("!bet") && (firstBettingRound)) {
+            handleBetForFirstRoundCommand(client, words);
+
+        } else if (command.startsWith("!draw") && drawRound && (game.getDrawCounter() != game.playersPlaying())) {
+            handleDrawingRound(client, words);
+        } else if (command.startsWith("!bet") && (secondBettingRound)) {
+            handleBetForSecondRoundCommand(client, words);
+        } else if (command.startsWith("!help")) {
+            //TODO: add help
+        }
+
+    }
     private static int getPlayerId(SocketChannel myClient) {
         //get player id from map
         String playerName = connectedUsers.get(myClient);
@@ -200,7 +223,7 @@ public class Server {
     }
 
     private static void handleSingleWinner() {
-        sendToAllUsers(null, "Player " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!");
+        sendToAllUsers(null, "\n\n\nPlayer " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!\n\n\n");
         game.getWinners();
         gameStarted = false;
         firstBettingRound = false;
@@ -225,41 +248,17 @@ public class Server {
                 sendToAllUsers(client, "Second betting round finished!\nChecking winner...");
                 int[] winners = game.getWinners();
                 if (winners.length == 1) {
-                    sendToAllUsers(client, uselessPlayerString + Integer.toString(winners[0] + 1) + " won the game!");
+                    sendToAllUsers(client, "\n\n\n" + uselessPlayerString + Integer.toString(winners[0] + 1) + " won the game!\n\n\n");
                 } else {
-                    String winnersString = "Players ";
+                    String winnersString = "\n\n\nPlayers ";
                     for (int winner : winners) {
                         winnersString += Integer.toString(winner + 1) + ", ";
                     }
-                    winnersString += "won the game!";
+                    winnersString += "won the game!\n\n\n";
                     sendToAllUsers(client, winnersString);
                 }
             }
         }
-    }
-
-    private static void validateCommands(SocketChannel client, String command) {
-        int playerId = getPlayerId(client);
-        String[] words = command.split(" ");
-        if (command.startsWith("!ready") && !gameStarted) {
-            handleReadyCommand(client, words);
-        } else if (command.startsWith("!hand")) {
-            sendToUser(client, game.getPlayer(playerId).getHandToString());
-        } else if (command.startsWith("!info")) {
-            sendToUser(client, getPlayerInfo(playerId));
-        } else if (command.startsWith("!turn")) {
-            sendToUser(client, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
-        } else if (command.startsWith("!bet") && (firstBettingRound)) {
-            handleBetForFirstRoundCommand(client, words);
-
-        } else if (command.startsWith("!draw") && drawRound && (game.getDrawCounter() != game.playersPlaying())) {
-            handleDrawingRound(client, words);
-        } else if (command.startsWith("!bet") && (secondBettingRound)) {
-            handleBetForSecondRoundCommand(client, words);
-        } else if (command.startsWith("!help")) {
-            //TODO: add help
-        }
-
     }
 
     private static void playerDraw(SocketChannel author, String[] words) {
