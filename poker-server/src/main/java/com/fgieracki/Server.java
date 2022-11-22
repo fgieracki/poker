@@ -14,7 +14,7 @@ public class Server {
     private static final int BUFFER_SIZE = 1024;
     private static Selector selector = null;
     //mapa wszystkich userow z ich unikatowymi kanalami
-    public static Map<SocketChannel, String> connectedUsers = new HashMap<>();
+    private static Map<SocketChannel, String> connectedUsers = new HashMap<>();
     static int usersCount = 0;
 
     static boolean gameStarted = false;
@@ -79,8 +79,7 @@ public class Server {
             logger.log(Level.WARNING, e.getMessage());
             e.printStackTrace();
             Thread.currentThread().interrupt();
-        }
-        finally {
+        } finally {
             try {
                 selector.close();
             } catch (IOException e) {
@@ -170,7 +169,7 @@ public class Server {
             sendToUser(myClient, notYourTurnWarning);
         } else {
             playerBet(myClient, command);
-            if(game.playersPlaying() == 1){
+            if (game.playersPlaying() == 1) {
                 handleSingleWinner();
             }
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
@@ -200,7 +199,7 @@ public class Server {
         }
     }
 
-    private static void handleSingleWinner(){
+    private static void handleSingleWinner() {
         sendToAllUsers(null, "Player " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!");
         game.getWinners();
         gameStarted = false;
@@ -216,7 +215,7 @@ public class Server {
         } else {
             playerBet(client, command);
 
-            if(game.playersPlaying() == 1){
+            if (game.playersPlaying() == 1) {
                 handleSingleWinner();
             }
 
@@ -273,7 +272,7 @@ public class Server {
             try {
                 int cardId = Integer.parseInt(words[i]);
                 if (cardId > 5 || cardId < 1) {
-                    if(cardId == 0){
+                    if (cardId == 0) {
                         sendToUser(author, "Skipped drawing!");
                     }
                     sendToUser(author, "Invalid card number! Try again.\nCard number must be between 1 and 5.");
@@ -294,7 +293,7 @@ public class Server {
         nextTurn();
     }
 
-    private static void handleRaiseBet(SocketChannel author,int playerId, String[] words) {
+    private static void handleRaiseBet(SocketChannel author, int playerId, String[] words) {
         if (words.length == 3) {
             try {
                 int raise = Integer.parseInt(words[2]);
@@ -354,7 +353,7 @@ public class Server {
         }
     }
 
-    private static void startGame(){
+    private static void startGame() {
         if (!gameStarted && game.checkIfPlayersAreReady() && usersCount >= 2) {
             gameStarted = true;
             game.startRound();

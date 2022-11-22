@@ -7,42 +7,44 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 //Watek czytania danych z serwera
-public class ServerConnection implements Runnable{
-    private SocketChannel serverSocket;
-    //recive information
-    private BufferedReader in;
-    //send information
+public class ServerConnection implements Runnable {
+    private final SocketChannel serverSocket;
     private static final int BUFFER_SIZE = 1024;
 
-    ServerConnection(SocketChannel socket) throws IOException {
-        this.serverSocket=socket;
+    static Logger logger
+            = Logger.getLogger(
+            ServerConnection.class.getName());
 
-
+    ServerConnection(SocketChannel socket) {
+        this.serverSocket = socket;
     }
+
     @Override
     public void run() {
         try {
-            while(true){
-                ByteBuffer serverResponse=ByteBuffer.allocate(BUFFER_SIZE);
+            while (true) {
+                ByteBuffer serverResponse = ByteBuffer.allocate(BUFFER_SIZE);
 
                 int test = serverSocket.read(serverResponse);
 
-                if(test == -1){
-                    System.out.println("Server disconnected");
+                if (test == -1) {
+                    logger.log(Level.INFO, "Server disconnected");
                     break;
                 }
 
                 serverResponse.flip();
                 String data = new String(serverResponse.array()).trim();
-                System.out.println(String.format("Server: %s",data));
-//                serverResponse.clear();
+                String msg = String.format("Server: %s", data);
+                logger.log(Level.INFO, msg);
 
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
