@@ -7,14 +7,17 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Client {
-    private static final int BUFFER_SIZE = 1024;
-
+    static Logger logger
+            = Logger.getLogger(
+            Client.class.getName());
 
     public static void main(String[] args) {
 
-        System.out.println("Starting server...");
+        logger.log(Level.INFO, "Starting server...");
         try {
             int port = 9999;
             InetAddress hostIP = InetAddress.getLocalHost();
@@ -23,23 +26,24 @@ public class Client {
             SocketChannel myClient = SocketChannel.open(myAddress);
 
             BufferedReader keyboardReader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println(String.format("Trying to connect to %s:%d...",
-                    myAddress.getHostName(), myAddress.getPort()));
-            ServerConnection server=new ServerConnection(myClient);
+            String msg = String.format("Trying to connect to %s:%d...",
+                    myAddress.getHostName(), myAddress.getPort());
+            logger.log(Level.INFO, msg);
+            ServerConnection server = new ServerConnection(myClient);
             //tworzymy watek czytania z serwera
             new Thread(server).start();
-            while(true){
-                String inputString=keyboardReader.readLine();
-                ByteBuffer myBuffer=ByteBuffer.wrap(inputString.getBytes());
+            while (true) {
+                String inputString = keyboardReader.readLine();
+                ByteBuffer myBuffer = ByteBuffer.wrap(inputString.getBytes());
                 myClient.write(myBuffer);
-                if(inputString.equals("exit"))break;
+                if (inputString.equals("exit")) break;
             }
 
 
-            System.out.println("Closing Client connection...");
+            logger.log(Level.INFO, "Closing Client connection...");
             myClient.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.INFO, e.getMessage());
             e.printStackTrace();
         }
     }
