@@ -290,7 +290,6 @@ public class Game {
                 playerPots[playerId] += players.get(playerId).getChips();
                 maxBet = playerPots[playerId];
                 players.get(playerId).removeChips(players.get(playerId).getChips());
-                lastPlayerAction = playerId;
             }
             default ->
                 playerDecisions[playerId] = Decision.FOLD;

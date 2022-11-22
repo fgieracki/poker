@@ -8,14 +8,14 @@ import java.util.Objects;
  *
  * Card class
  *
- * @param rank - rank of the card
+ *        rank - rank of the card
  *             14 - Ace
  *             13 - King
  *             12 - Queen
  *             11 - Jack
  *              2 - 10 - numbers of the card
  *
- * @param suit - suit of the card
+ *        suit - suit of the card
  *             0 - Spades
  *             1 - Hearts
  *             2 - Diamonds
@@ -40,13 +40,6 @@ public class Card {
         this.suit = suit;
     }
 
-    public Card() {
-        this.rank = 0;
-        this.suit = 0;
-    }
-
-    //getters and setters
-
     //getters
     public int getRank() {
         return rank;
@@ -57,25 +50,8 @@ public class Card {
     }
 
 
-    //setters
-
-    /**
-     * @param rank - rank of the card
-     */
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
-
-    /**
-     * @param suit - suit of the card
-     */
-    public void setSuit(int suit) {
-        this.suit = suit;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
         return rank == card.rank && suit == card.suit;

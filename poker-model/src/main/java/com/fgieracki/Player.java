@@ -8,10 +8,10 @@ import java.util.ArrayList;
  *
  *  Player class
  *
- * @param hand - array of cards
+ *        hand - array of cards
  *             5 cards in the hand
  *
- * @param chips - number of chips
+ *       chips - number of chips
  *
  *
  */

@@ -40,7 +40,7 @@ public class ServerConnection implements Runnable {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, e.getMessage());
         }
     }
 }

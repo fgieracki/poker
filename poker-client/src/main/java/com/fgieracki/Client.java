@@ -44,7 +44,6 @@ public class Client {
             myClient.close();
         } catch (IOException e) {
             logger.log(Level.INFO, e.getMessage());
-            e.printStackTrace();
         }
     }
 

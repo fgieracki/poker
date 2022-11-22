@@ -74,8 +74,8 @@ public class HandValue {
 
     //check for full house
     private boolean isFullHouse(){
-            return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank()) ||
-                    (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
+            return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank())
+                    || (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
         }
 
     //check for flush
@@ -100,29 +100,26 @@ public class HandValue {
 
     //check for three of a kind
     private boolean isThreeOfAKind(){
-        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank()) ||
-                (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank()) ||
-                (hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
+        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(1).getRank() == hand.get(2).getRank())
+                || (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(2).getRank() == hand.get(3).getRank())
+                || (hand.get(2).getRank() == hand.get(3).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
     }
 
     //check for two pairs
     private boolean isTwoPairs(){
-        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank()) ||
-                (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(3).getRank() == hand.get(4).getRank()) ||
-                (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
+        return (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(2).getRank() == hand.get(3).getRank())
+                || (hand.get(0).getRank() == hand.get(1).getRank() && hand.get(3).getRank() == hand.get(4).getRank())
+                || (hand.get(1).getRank() == hand.get(2).getRank() && hand.get(3).getRank() == hand.get(4).getRank());
     }
 
     //check for one pair
     private boolean isOnePair(){
-         return ((hand.get(0).getRank() == hand.get(1).getRank()) ||
-                (hand.get(1).getRank() == hand.get(2).getRank()) ||
-                (hand.get(2).getRank() == hand.get(3).getRank()) ||
-                (hand.get(3).getRank() == hand.get(4).getRank()));
+         return ((hand.get(0).getRank() == hand.get(1).getRank())
+                 || (hand.get(1).getRank() == hand.get(2).getRank())
+                 || (hand.get(2).getRank() == hand.get(3).getRank())
+                 || (hand.get(3).getRank() == hand.get(4).getRank()));
     }
 
-    public int getHighestCard(){
-        return hand.get(0).getRank();
-    }
 
     public int getNthHighestCard(int n){
         return hand.get(n).getRank();

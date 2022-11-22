@@ -1,6 +1,7 @@
 package com.fgieracki;
 
 import java.util.ArrayList;
+import java.util.*;
 
 /**
  * @author fgieracki
@@ -29,10 +30,9 @@ import java.util.ArrayList;
 
 public class Deck {
     private final ArrayList<Card> cards;
+    private Random rand = new Random();
 
-    //default constructor
     public Deck() {
-        //create cards
         cards = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             for (int j = 2; j < 15; j++) {
@@ -49,7 +49,7 @@ public class Deck {
     public void shuffle() {
         //shuffle cards
         for (int i = 0; i < cards.size(); i++) {
-            int random = (int) (Math.random() * cards.size());
+            int random = (rand.nextInt(cards.size()));
             swap(i, random);
         }
     }
@@ -83,9 +83,6 @@ public class Deck {
      * @param j - index of the second card
      */
     private boolean swap(int i, int j){
-        if(i < 0 || i >= cards.size() || j < 0 || j >= cards.size()){
-            return false;
-        }
         Card tmp = cards.get(i);
         cards.set(i, cards.get(j));
         cards.set(j, tmp);

@@ -77,13 +77,14 @@ public class Server {
             mySocket.close();
         } catch (IOException | InterruptedException e) {
             logger.log(Level.WARNING, e.getMessage());
-            e.printStackTrace();
+
             Thread.currentThread().interrupt();
         } finally {
             try {
                 selector.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING, e.getMessage());
+
             }
         }
     }
@@ -428,7 +429,7 @@ public class Server {
                 }
             } catch (IOException e) {
                 logger.log(Level.WARNING, e.getMessage());
-                e.printStackTrace();
+
             }
         });
     }
@@ -440,7 +441,7 @@ public class Server {
             user.write(serverResponse);
         } catch (IOException e) {
             logger.log(Level.WARNING, e.getMessage());
-            e.printStackTrace();
+
         }
     }
 
