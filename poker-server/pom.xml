@@ -26,6 +26,10 @@
             <groupId>com.fgieracki</groupId>
             <artifactId>poker-model</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

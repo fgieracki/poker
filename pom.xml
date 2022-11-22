@@ -13,7 +13,6 @@
         <module>poker-client</module>
         <module>poker-server</module>
         <module>poker-model</module>
-        <module>poker-common</module>
     </modules>
 
     <dependencyManagement>
@@ -58,5 +57,11 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
