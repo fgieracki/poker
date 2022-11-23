@@ -2,6 +2,8 @@ package com.fgieracki;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.max;
+
 /**
  *  @author fgieracki
  *  @version 1.0
@@ -34,7 +36,7 @@ public class Player{
             handString += card.toString() + ", ";
         }
         //replace last comma with curly bracket
-        handString = handString.substring(0, handString.length() - 2) + "}";
+        handString = handString.substring(0, max(0, handString.length() - 2)) + "}";
         return handString;
     }
 
