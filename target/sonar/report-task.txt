@@ -2,5 +2,5 @@ projectKey=PokerPZ1
 serverUrl=http://localhost:9000
 serverVersion=9.7.1.62043
 dashboardUrl=http://localhost:9000/dashboard?id=PokerPZ1
-ceTaskId=AYSgq4pKJLLwnR82uX-L
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYSgq4pKJLLwnR82uX-L
+ceTaskId=AYSiH0r-cSl_ikB4JXHe
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYSiH0r-cSl_ikB4JXHe

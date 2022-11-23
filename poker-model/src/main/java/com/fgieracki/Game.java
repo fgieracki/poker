@@ -50,9 +50,12 @@ public class Game {
         this.pot -= pot;
     }
 
-    private boolean checkIfPlayerIsPlaying(int playerNumber){
-        return !(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK);
+    private void splitPot(int winner){
+        players.get(winner).addChips(getPot());
+        setPot(0);
     }
+
+
     //Player management methods
     /**
      * @function addPlayers() - adds a player to the game
@@ -64,30 +67,31 @@ public class Game {
         }
     }
 
-    public int[]getWinners(){
-        int[] winners = handleWinners();
-        splitPot(winners);
-        return winners;
+    public void addPlayer(){
+        players.add(new Player());
     }
 
-    private void splitPot(int[] winners){
-        int splitPot = pot/winners.length;
-        for (int winner : winners) {
-            players.get(winner).addChips(splitPot);
-        }
+    public int getWinner(){
+        int winner = handleWinners();
+        splitPot(winner);
+        return winner;
     }
 
-    private int[] handleWinners(){
+    protected boolean checkIfPlayerIsPlaying(int playerNumber){
+        return !(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK);
+    }
+
+    private int handleWinners(){
         int[] winners = basicWinnerSelection();
         if(winners.length == 1){
-            return winners;
+            return winners[0];
         }
         else{
             return tieBreaker(winners);
         }
     }
 
-    private int[] tieBreaker(int[] winners){
+    private int tieBreaker(int[] winners){
         int[] newWinners = new int[winners.length];
         int winnersAmount = 1;
         int bestPlayer = winners[0];
@@ -115,11 +119,27 @@ public class Game {
         }
         int[] finalWinners = new int[winnersAmount];
         System.arraycopy(newWinners, 0, finalWinners, 0, winnersAmount);
-        return finalWinners;
+        return finalTieBreaker(finalWinners);
     }
 
+    private int finalTieBreaker(int[] winners){
+        //get the best hand by comparing suits
+        int bestPlayer = winners[0];
+        for(int i = 1; i < winners.length; i++){
+            for(int cardId = 0; cardId < 5; cardId++){
+                if(players.get(bestPlayer).getHandValue().getNthHighestCardSuit(cardId) < players.get(winners[i]).getHandValue().getNthHighestCardSuit(cardId)){
+                    bestPlayer = winners[i];
+                    break;
+                }
+                else if(players.get(bestPlayer).getHandValue().getNthHighestCardSuit(cardId) > players.get(winners[i]).getHandValue().getNthHighestCardSuit(cardId)){
+                    break;
+                }
+            }
+        }
+        return bestPlayer;
+    }
 
-    private int[] basicWinnerSelection(){
+    protected int[] basicWinnerSelection(){
         int[] winners = new int[4];
         int winnersAmount = 0;
         int maxHandValue = 0;
@@ -150,9 +170,7 @@ public class Game {
     public int getLastPlayerAction(){
         return lastPlayerAction;
     }
-    public void addPlayer(){
-        players.add(new Player());
-    }
+
 
     public int getSmallBlindValue(){
         return 10;
@@ -160,10 +178,6 @@ public class Game {
 
     public int getBigBlindValue(){
         return 20;
-    }
-
-    public void addPlayer(Player player){
-        players.add(player);
     }
 
     public Player getPlayer(int index){
@@ -174,34 +188,12 @@ public class Game {
         return playerPots[index];
     }
 
-    public void setPlayerChips(int playerId, int chips){
-        players.get(playerId).setChips(chips);
-    }
-
-    public void setPlayersChips(int chips){
-        for (Player player : players) {
-            player.setChips(chips);
-        }
-    }
-
-    public void addPlayersChips(int chips){
-        for (Player player : players) {
-            player.addChips(chips);
-        }
-    }
-
     public int getPlayerChips(int playerId){
         return players.get(playerId).chips;
     }
 
     public int getDealer(){
         return dealer;
-    }
-
-    public void removePlayersChips(int chips){
-        for (Player player : players) {
-            player.removeChips(chips);
-        }
     }
 
     public int getPlayerTurn(){
@@ -227,7 +219,9 @@ public class Game {
         return true;
     }
 
-
+    public void addCard(int playerId, Card card){
+        players.get(playerId).hand.add(card);
+    }
     public void startRound(){
         prepareGame();
         dealCards();
@@ -279,6 +273,7 @@ public class Game {
                 addPot(bet - playerPots[playerId]);
                 maxBet = bet;
                 players.get(playerId).removeChips(bet - playerPots[playerId]);
+                playerPots[playerId] = bet;
                 lastPlayerAction = playerId;
             }
             case CHECK ->
@@ -288,8 +283,8 @@ public class Game {
                 playerDecisions[playerId] = Decision.ALL_IN;
                 addPot(players.get(playerId).getChips());
                 playerPots[playerId] += players.get(playerId).getChips();
-                maxBet = playerPots[playerId];
-                players.get(playerId).removeChips(players.get(playerId).getChips());
+                maxBet = max(maxBet, playerPots[playerId]);
+                players.get(playerId).setChips(0);
             }
             default ->
                 playerDecisions[playerId] = Decision.FOLD;

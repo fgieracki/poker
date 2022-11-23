@@ -13,7 +13,8 @@ public class CardTest {
         Card card3 = new Card(2, 2);
         Card card4 = new Card(1, 2);
         Card card5 = new Card(2, 1);
-
+        Player player1 = new Player();
+        assertEquals(false, card1.equals(player1));
         assertEquals(false, card1.equals(null));
         assertEquals(card1, card2);
         assertEquals(card1.hashCode(), card2.hashCode());

@@ -97,4 +97,8 @@ public class Player{
     public HandValue getHandValue() {
         return HandValue.getHandValue(hand);
     }
+
+    public int getHandSize(){
+        return hand.size();
+    }
 }

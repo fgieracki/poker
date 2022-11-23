@@ -144,8 +144,6 @@ public class Server {
             handleDrawingRound(client, words);
         } else if (command.startsWith("!bet") && (secondBettingRound)) {
             handleBetForSecondRoundCommand(client, words);
-        } else if (command.startsWith("!help")) {
-            //TODO: add help
         }
 
     }
@@ -179,7 +177,8 @@ public class Server {
             game.getPlayer(playerId).setChips(chips);
             game.getPlayer(playerId).setReady(true);
             sendToUser(myClient, "You are ready to play!");
-            sendToAllUsers(myClient, uselessPlayerString + Integer.toString(playerId + 1) + " is ready to play!");
+            sendToAllUsers(myClient, uselessPlayerString
+                    + Integer.toString(playerId + 1) + " is ready to play!");
             startGame();
 
         } else {
@@ -199,8 +198,7 @@ public class Server {
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
                 firstBettingRound = false;
                 game.setPlayerTurn(game.getDealer() - 1);
-                sendToAllUsers(null, "First betting round finished!\nStarting drawing round...");
-                sendToAllUsers(null, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
+                sendToAllUsers(null, "First betting round finished!\nStarting drawing round...\n\n" + uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
                 sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())), "It's your turn! Type '!draw <card numbers>' to draw cards.");
                 drawRound = true;
             }
@@ -225,7 +223,7 @@ public class Server {
 
     private static void handleSingleWinner() {
         sendToAllUsers(null, "\n\n\nPlayer " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!\n\n\n");
-        game.getWinners();
+        game.getWinner();
         gameStarted = false;
         firstBettingRound = false;
         drawRound = false;
@@ -247,17 +245,8 @@ public class Server {
                 secondBettingRound = false;
                 game.setPlayerTurn(game.getDealer() - 1);
                 sendToAllUsers(client, "Second betting round finished!\nChecking winner...");
-                int[] winners = game.getWinners();
-                if (winners.length == 1) {
-                    sendToAllUsers(client, "\n\n\n" + uselessPlayerString + Integer.toString(winners[0] + 1) + " won the game!\n\n\n");
-                } else {
-                    String winnersString = "\n\n\nPlayers ";
-                    for (int winner : winners) {
-                        winnersString += Integer.toString(winner + 1) + ", ";
-                    }
-                    winnersString += "won the game!\n\n\n";
-                    sendToAllUsers(client, winnersString);
-                }
+                int winner = game.getWinner();
+                sendToAllUsers(client, "\n\n\n" + uselessPlayerString + Integer.toString(winner + 1) + " won the game!\n\n\n");
             }
         }
     }

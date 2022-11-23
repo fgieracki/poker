@@ -124,4 +124,8 @@ public class HandValue {
     public int getNthHighestCard(int n){
         return hand.get(n).getRank();
     }
+
+    public int getNthHighestCardSuit(int n) {
+        return hand.get(n).getSuit();
+    }
 }

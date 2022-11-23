@@ -27,7 +27,10 @@ public class PlayerTest extends TestCase {
         Player player = new Player();
         Deck deck = new Deck();
         player.getFiveCards(deck);
+        while(deck.deckSize() > 4) deck.getTopCard();
+        player.getFiveCards(deck);
         assertEquals(5, player.hand.size());
+
     }
 
     public void testChips() {

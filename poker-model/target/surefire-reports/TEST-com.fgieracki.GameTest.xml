@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="5" failures="0" name="com.fgieracki.CardTest" time="0.015" errors="0" skipped="0">
+<testsuite tests="25" failures="0" name="com.fgieracki.GameTest" time="0.017" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="17.0.5+9-LTS-191"/>
@@ -64,9 +64,29 @@
     <property name="sun.stdout.encoding" value="cp852"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.fgieracki.CardTest" name="testToString" time="0.014"/>
-  <testcase classname="com.fgieracki.CardTest" name="descendingCompare" time="0"/>
-  <testcase classname="com.fgieracki.CardTest" name="testEquals" time="0.001"/>
-  <testcase classname="com.fgieracki.CardTest" name="rankToString" time="0"/>
-  <testcase classname="com.fgieracki.CardTest" name="suitToString" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testSetLastPlayerAction" time="0.005"/>
+  <testcase classname="com.fgieracki.GameTest" name="testAddCard" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testAddDraw" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testBet" time="0.003"/>
+  <testcase classname="com.fgieracki.GameTest" name="testPot" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testPlayBlind" time="0.001"/>
+  <testcase classname="com.fgieracki.GameTest" name="testFinalTieBreaker2" time="0.004"/>
+  <testcase classname="com.fgieracki.GameTest" name="testFinalTieBreaker3" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testPlayersPlaying" time="0.001"/>
+  <testcase classname="com.fgieracki.GameTest" name="testPlayers" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetPlayerPot" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetPlayerTurn" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetLastPlayerAction" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetDeck" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testFinalTieBreaker" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetSmallBlindValue" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testTieBreaker1" time="0.001"/>
+  <testcase classname="com.fgieracki.GameTest" name="testTieBreaker2" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testCheckIfPlayersAreReady" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetDealer" time="0.001"/>
+  <testcase classname="com.fgieracki.GameTest" name="testPlayerTurn" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetWinner" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testGetBigBlindValue" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testBasicWinnerSelection" time="0"/>
+  <testcase classname="com.fgieracki.GameTest" name="testStartRound" time="0.001"/>
 </testsuite>

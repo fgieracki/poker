@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 //Watek czytania danych z serwera
 public class ServerConnection implements Runnable {
     private final SocketChannel serverSocket;
-    private static final int BUFFER_SIZE = 1024;
+    protected static final int BUFFER_SIZE = 1024;
 
     static Logger logger
             = Logger.getLogger(
