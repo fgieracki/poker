@@ -77,7 +77,7 @@ public class Server {
                 }
             }
             mySocket.close();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             logger.log(Level.WARNING, e.getMessage());
 
             Thread.currentThread().interrupt();
@@ -113,12 +113,32 @@ public class Server {
                 "Type '!ready <starting chips>' to start the game.");
     }
 
-    protected static void processReadEvent(SelectionKey key)
-            throws IOException, InterruptedException {
+    protected static void processReadEvent(SelectionKey key) {
         SocketChannel myClient = (SocketChannel) key.channel();
 
         ByteBuffer clientResponse = ByteBuffer.allocate(BUFFER_SIZE);
-        myClient.read(clientResponse);
+        try{
+            myClient.read(clientResponse);
+        }
+        catch (IOException e){
+            logger.log(Level.WARNING, e.getMessage());
+            usersCount--;
+            String msg = connectedUsers.get(myClient) + " has left the game. Players: "
+                    + Integer.toString(usersCount) + "/4";
+            sendToAllUsersByPlayerId(-1, msg);
+            logger.log(Level.INFO, msg);
+            game.removePlayer(getPlayerId(myClient));
+            connectedUsers.remove(myClient);
+
+            //change names of connected users
+            for (SocketChannel user : connectedUsers.keySet()) {
+                String newPlayerName = uselessPlayerString + Integer.toString(getPlayerId(user));
+                connectedUsers.replace(user, newPlayerName);
+            }
+
+            key.cancel();
+            return;
+        }
         String data = new String(clientResponse.array()).trim();
 
         if (data.length() > 0) {

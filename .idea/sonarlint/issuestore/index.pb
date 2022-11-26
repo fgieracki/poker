@@ -1,6 +1,4 @@
 
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 a
 1poker-model/src/main/java/com/fgieracki/Deck.java,6\7\67ae0c5f999f4928bb5030b2caa33912efacd643
 e
@@ -10,17 +8,11 @@ j
 f
 6poker-model/src/main/java/com/fgieracki/HandValue.java,9\9\9935d7f392a29592cec8c4519c7673ad57ecafad
 D
-poker-server/pom.xml,0\3\035fa070fa4b5f933fa799a1ccdbb69234dd5460
-D
 poker-client/pom.xml,1\f\1f757cf664bd6c17f728a22aca3bce20bee31197
 h
 8poker-client/src/test/java/com/fgieracki/ClientTest.java,7\1\7132d4b897dfa4a76a1b5eed493e9de29aab0a72
 r
 Bpoker-client/src/test/java/com/fgieracki/ServerConnectionTest.java,1\1\1103df07b6adf5458e767f91fa3ccdc8fbddfcfb
-d
-4poker-client/src/main/java/com/fgieracki/Client.java,9\5\957f9aa2e79216989f048d45d935209620b40f72
-n
->poker-client/src/main/java/com/fgieracki/ServerConnection.java,f\2\f281fdd2d84231ae99a6c8b3cf5e2ad7f20dbed8
 C
 poker-model/pom.xml,3\1\31e84fcaad79442aa5007cb04b513134415519ef
 e
@@ -31,5 +23,19 @@ g
 7poker-model/src/test/java/com/fgieracki/PlayerTest.java,a\f\af7e19ec6612f400fb39c4fbf0ca66a846a0eb5b
 e
 5poker-model/src/test/java/com/fgieracki/GameTest.java,3\2\3285c01ede4c12367df2e5ada94a956221d3da5f
+c
+3poker-model/src/main/java/com/fgieracki/Player.java,e\7\e794fc5abc7e27c826a24a5e211aeba3e558969f
+h
+8poker-server/src/test/java/com/fgieracki/ServerTest.java,7\4\74c04800b7955c398f8f7867a7859c97c52a7373
 a
 1poker-model/src/main/java/com/fgieracki/Game.java,4\4\44bb6e71b1ef621b68c8d0542be368c43f4be09a
+n
+>poker-client/src/main/java/com/fgieracki/ServerConnection.java,f\2\f281fdd2d84231ae99a6c8b3cf5e2ad7f20dbed8
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+d
+4poker-server/src/main/java/com/fgieracki/Server.java,2\1\21374ed9cfa4ba51c6a852010da1e0e72918ad26
+D
+poker-server/pom.xml,0\3\035fa070fa4b5f933fa799a1ccdbb69234dd5460
+d
+4poker-client/src/main/java/com/fgieracki/Client.java,9\5\957f9aa2e79216989f048d45d935209620b40f72

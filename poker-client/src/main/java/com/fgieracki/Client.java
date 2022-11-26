@@ -35,7 +35,7 @@ public class Client {
             ServerConnection server = new ServerConnection(myClient);
             //tworzymy watek czytania z serwera
             new Thread(server).start();
-            if(Objects.equals(args[0], "test")) {
+            if(args.length > 0 && Objects.equals(args[0], "test")) {
                 myClient.close();
             }
             while (true) {

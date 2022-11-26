@@ -17,6 +17,9 @@ public class Game {
     private final int ante;
     private int dealer;
     private int drawCounter = 0;
+
+
+
     public enum Decision {FOLD, CALL, RAISE, CHECK, ALL_IN}
     private final Decision[] playerDecisions = new Decision[4];
 
@@ -69,6 +72,10 @@ public class Game {
 
     public void addPlayer(){
         players.add(new Player());
+    }
+
+    public void removePlayer(int playerId) {
+        players.remove(playerId);
     }
 
     public int getWinner(){

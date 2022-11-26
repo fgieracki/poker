@@ -22,14 +22,22 @@ public class ServerConnection implements Runnable {
 
     @Override
     public void run() {
-        try {
+//        try {
             while (true) {
                 ByteBuffer serverResponse = ByteBuffer.allocate(BUFFER_SIZE);
 
-                int test = serverSocket.read(serverResponse);
+                int test = 0;
+                try {
+                    test = serverSocket.read(serverResponse);
+                }
+                catch (Exception e) {
+                    logger.log(Level.SEVERE, "Server disconnected!");
+                    return;
+                }
+
 
                 if (test == -1) {
-                    logger.log(Level.INFO, "Server disconnected");
+                    logger.log(Level.SEVERE, "Server disconnected");
                     break;
                 }
 
@@ -39,8 +47,8 @@ public class ServerConnection implements Runnable {
                 logger.log(Level.INFO, msg);
 
             }
-        } catch (IOException e) {
-            logger.log(Level.INFO, e.getMessage());
-        }
+//        } catch (IOException e) {
+//            logger.log(Level.INFO, e.getMessage());
+//        }
     }
 }
