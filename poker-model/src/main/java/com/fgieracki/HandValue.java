@@ -2,6 +2,13 @@ package com.fgieracki;
 
 import java.util.ArrayList;
 
+/**
+ * @author fgieracki
+ * @version 1.0
+ *
+ *         Class representing a hand value
+ */
+
 public class HandValue {
     private int value;
     private final ArrayList<Card> hand;
@@ -12,12 +19,21 @@ public class HandValue {
         value = 0;
     }
 
+    /**
+     *  getHandValue
+     * @param hand
+     * @return the value
+     */
     public static HandValue getHandValue(ArrayList<Card> hand) {
         HandValue handValue = new HandValue(hand);
         handValue.countHandValue();
         return handValue;
     }
 
+    /**
+     *  countHandValue
+     * @return the HandValue of the hand
+     */
     public int countHandValue(){
         if(isRoyalFlush()){
             value = 10;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="11" failures="0" name="com.fgieracki.HandValueTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="11" failures="0" name="com.fgieracki.HandValueTest" time="0.003" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="17.0.5+9-LTS-191"/>
@@ -64,15 +64,15 @@
     <property name="sun.stdout.encoding" value="cp852"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.fgieracki.HandValueTest" name="testStraight" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testStraight" time="0.001"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testTwoPair" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testFlush" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testPair" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testPair" time="0.001"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testFullHouse" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testHighCard" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testRoyalFlush" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testStraightFlush" time="0.001"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testFourOfAKind" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testStraightFlush" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testFourOfAKind" time="0.001"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testGetHandValue" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testThreeOfAKind" time="0"/>
 </testsuite>

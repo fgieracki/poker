@@ -31,11 +31,16 @@ public class Server {
 
     protected static boolean running = true;
 
+    protected static int maxPlayers = 4;
+
     static Logger logger
             = Logger.getLogger(
             Server.class.getName());
 
     public static void main(String[] args) {
+        if(args.length > 0) {
+            maxPlayers = Integer.parseInt(args[0]);
+        }
 
         logger.log(Level.INFO, "starting server");
 
@@ -64,7 +69,7 @@ public class Server {
                 while (i.hasNext()) {
                     SelectionKey key = i.next();
 
-                    if (key.isAcceptable() && usersCount < 4 && !gameStarted) {
+                    if (key.isAcceptable() && usersCount < maxPlayers && !gameStarted) {
                         processAcceptEvent(mySocket);
                     } else if (key.isAcceptable()) {
                         SocketChannel client = mySocket.accept();
@@ -104,10 +109,10 @@ public class Server {
         // Register interest in reading this channel
         myClient.register(selector, SelectionKey.OP_READ);
         String message = connectedUsers.get(myClient) + " has joined the game. Players: "
-                + Integer.toString(usersCount) + "/4";
+                + Integer.toString(usersCount) + "/maxPlayers";
         logger.log(Level.INFO, message);
         message = connectedUsers.get(myClient) + " has joined the game. \nPlayers: "
-                + Integer.toString(usersCount) + "/4\n";
+                + Integer.toString(usersCount) + "/maxPlayers\n";
         sendToAllUsers(myClient, message);
         sendToUser(myClient, "Welcome to the poker game! \n" +
                 "Type '!ready <starting chips>' to start the game.");
@@ -124,7 +129,7 @@ public class Server {
             logger.log(Level.WARNING, e.getMessage());
             usersCount--;
             String msg = connectedUsers.get(myClient) + " has left the game. Players: "
-                    + Integer.toString(usersCount) + "/4";
+                    + Integer.toString(usersCount) + "/maxPlayers";
             sendToAllUsersByPlayerId(-1, msg);
             logger.log(Level.INFO, msg);
             game.removePlayer(getPlayerId(myClient));
@@ -277,7 +282,7 @@ public class Server {
 
     protected static void playerDraw(int playerId, String[] words) {
         if (words.length > 5) {
-            sendToUserByPlayerId(playerId, "Too many cards to draw! Try again.\nMaximum cards to draw is 4.");
+            sendToUserByPlayerId(playerId, "Too many cards to draw! Try again.\nMaximum cards to draw is maxPlayers.");
             return;
         }
         for (int i = 1; i < words.length; i++) {

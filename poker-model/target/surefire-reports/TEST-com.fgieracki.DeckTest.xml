@@ -64,7 +64,7 @@
     <property name="sun.stdout.encoding" value="cp852"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.fgieracki.DeckTest" name="getTopCard" time="0.001"/>
-  <testcase classname="com.fgieracki.DeckTest" name="deckSize" time="0"/>
+  <testcase classname="com.fgieracki.DeckTest" name="getTopCard" time="0"/>
+  <testcase classname="com.fgieracki.DeckTest" name="deckSize" time="0.001"/>
   <testcase classname="com.fgieracki.DeckTest" name="shuffle" time="0"/>
 </testsuite>

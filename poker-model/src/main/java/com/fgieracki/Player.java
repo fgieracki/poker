@@ -1,5 +1,6 @@
 package com.fgieracki;
 
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
 import static java.lang.Math.max;
@@ -23,12 +24,10 @@ public class Player{
     int chips;
     boolean isReady;
 
-
     public Player(){
         hand = new ArrayList<>();
         isReady = false;
     }
-
 
     public String getHandToString(){
         String handString = "{";
@@ -49,7 +48,7 @@ public class Player{
         hand.set(index, card);
     }
     /**
-     * @function getFiveCards() - gets five cards from the deck
+     *  getFiveCards() - gets five cards from the deck
      * @param deck - deck of cards
      */
     public void getFiveCards(Deck deck){
@@ -61,7 +60,7 @@ public class Player{
     }
 
     /**
-     * @function getChips() - gets the number of chips
+     *  getChips() - gets the number of chips
      * @return chips - number of chips
      */
     public int getChips(){
@@ -69,7 +68,7 @@ public class Player{
     }
 
     /**
-    * @function setChips() - sets the number of chips
+    *  setChips() - sets the number of chips
     * @param chips - number of chips
     */
     public void setChips(int chips){
@@ -81,7 +80,7 @@ public class Player{
     }
 
     /**
-    * @function addChips() - adds chips to the player
+    *  addChips() - adds chips to the player
     * @param chips - number of chips
     */
     public void addChips(int chips){
@@ -89,7 +88,7 @@ public class Player{
     }
 
     /**
-    * @function removeChips() - removes chips from the player
+    *  removeChips() - removes chips from the player
     * @param chips - number of chips
     */
     public void removeChips(int chips){

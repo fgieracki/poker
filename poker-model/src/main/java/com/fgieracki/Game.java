@@ -4,6 +4,15 @@ import java.util.ArrayList;
 
 import static java.lang.Math.max;
 
+/**
+ * @author fgieracki
+ * Game class
+ * This class is responsible for the game logic
+ * It contains the game state and the game logic
+ *
+ * @version 1.0
+ */
+
 public class Game {
     private Deck deck;
     private final ArrayList<Player> players;
@@ -61,7 +70,7 @@ public class Game {
 
     //Player management methods
     /**
-     * @function addPlayers() - adds a player to the game
+     *  addPlayers() - adds a player to the game
      * @param amount - player amount to be added
      */
     public void addPlayers(int amount){
@@ -78,16 +87,30 @@ public class Game {
         players.remove(playerId);
     }
 
+    /**
+     *  getWinner() - returns the winner of the game
+     * @return - returns the winner of the game
+     */
     public int getWinner(){
         int winner = handleWinners();
         splitPot(winner);
         return winner;
     }
 
+
+    /**
+     *  checkIfPlayerIsPlaying() - checks if the player is still in the game
+     * @param playerNumber
+     * @return
+     */
     protected boolean checkIfPlayerIsPlaying(int playerNumber){
         return !(playerDecisions[playerNumber] == Decision.FOLD || playerDecisions[playerNumber] == Decision.CHECK);
     }
 
+    /**
+     *  handleWinners() - handles the winners of the game
+     * @return - returns the winner of the game
+     */
     private int handleWinners(){
         int[] winners = basicWinnerSelection();
         if(winners.length == 1){
@@ -98,6 +121,12 @@ public class Game {
         }
     }
 
+    /**
+     *  tieBreaker - second selection of the potential winners,
+     * bases on the highest cards in the hand
+     * @param winners
+     * @return - returns the winner of the game
+     */
     private int tieBreaker(int[] winners){
         int[] newWinners = new int[winners.length];
         int winnersAmount = 1;
@@ -129,6 +158,13 @@ public class Game {
         return finalTieBreaker(finalWinners);
     }
 
+
+    /**
+     *  finalTieBreaker - third selection of the potential winners,
+     * bases on the card Suits
+     * @param winners
+     * @return winnerId
+     */
     private int finalTieBreaker(int[] winners){
         //get the best hand by comparing suits
         int bestPlayer = winners[0];
@@ -146,6 +182,12 @@ public class Game {
         return bestPlayer;
     }
 
+
+    /**
+     *  basicWinnerSelection() -first selection of the winner of the game
+     * bases on the hand value
+     * @return - returns the potential winners of the game
+     */
     protected int[] basicWinnerSelection(){
         int[] winners = new int[4];
         int winnersAmount = 0;
@@ -211,12 +253,20 @@ public class Game {
         return deck;
     }
 
+    /**
+     *  nextPlayerTurn() - changes the player turn
+     */
     public void nextPlayerTurn(){
         do {
             playerTurn = (playerTurn + 1) % players.size();
         } while(!checkIfPlayerIsPlaying(playerTurn) && playersPlaying() > 1);
 
     }
+
+    /**
+     *  checkIfPlayersAreReady() - check if all connected players are ready to play
+     * @return - true if all connected players are ready to play, otherwise false
+     */
     public boolean checkIfPlayersAreReady(){
         for (Player player : players) {
             if(!player.isReady){
@@ -225,6 +275,7 @@ public class Game {
         }
         return true;
     }
+
 
     public void addCard(int playerId, Card card){
         players.get(playerId).hand.add(card);
@@ -256,6 +307,10 @@ public class Game {
         }
     }
 
+    /**
+     *  prepareGame() - prepares the game for the next round
+     * inits default variable values
+     */
     private void prepareGame(){
         dealer = (dealer + 1) % players.size();
         lastPlayerAction = (dealer + players.size() - 1) % players.size();
@@ -267,6 +322,12 @@ public class Game {
         playerTurn = dealer;
     }
 
+    /**
+     *  bet - handles the bet action
+     * @param playerId
+     * @param decision
+     * @param bet
+     */
     public void bet(int playerId, Decision decision, int bet){
         switch (decision) {
             case CALL -> {
@@ -315,6 +376,11 @@ public class Game {
         return maxBet;
     }
 
+    /**
+     *  playBlind - handles the blind plays
+     * @param value
+     * @return - returns true if player was able to play the blind, otherwise false
+     */
     public boolean playBlind(int value){
         if(players.get(playerTurn).getChips() < value - playerPots[playerTurn]){
             playerDecisions[playerTurn] = Decision.FOLD;
@@ -329,6 +395,10 @@ public class Game {
     }
 
 
+    /**
+     *  playersPlaying - returns the amount of players playing
+     * @return - the amount of players playing
+     */
     public int playersPlaying(){
         int playersPlaying = 0;
         for (int i = 0; i < players.size(); i++) {

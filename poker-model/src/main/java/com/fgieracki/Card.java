@@ -21,11 +21,11 @@ import java.util.Objects;
  *             2 - Diamonds
  *             3 - Clubs
  *
- * @function getRank() - returns rank of the card
- * @function getSuit() - returns suit of the card
- * @function toString() - returns string representation of the card
- * @function equals() - returns true if two cards are equal
- * @function hashCode() - returns hash code of the card
+ *  getRank() - returns rank of the card
+ *  getSuit() - returns suit of the card
+ *  toString() - returns string representation of the card
+ *  equals() - returns true if two cards are equal
+ *  hashCode() - returns hash code of the card
  *
  */
 
@@ -62,12 +62,19 @@ public class Card {
         return Objects.hash(rank, suit);
     }
 
+    /**
+     *  toString()
+     * @return string representation of the card
+     */
     @Override
     public String toString(){
         return "[" + rankToString() + " " + suitToString() + "]";
     }
 
-    //convert rank to string
+    /**
+     *  rankToString() - returns string representation of the rank
+     * @return string representation of the rank
+     */
     public String rankToString(){
         return switch (rank) {
             case 14 -> "Ace";
@@ -78,6 +85,10 @@ public class Card {
         };
     }
 
+    /**
+     *  suitToString() - returns string representation of the suit
+     * @return string representation of the suit
+     */
     public String suitToString(){
         return switch (suit) {
             case 0 -> "Spades";
@@ -88,6 +99,11 @@ public class Card {
         };
     }
 
+    /**
+     *  descendingCompare() - compares two cards
+     * @param card
+     * @return 1 if this card is greater than the card passed as a parameter
+     */
     public int descendingCompare(Card card) {
         return Integer.compare(card.rank, this.rank);
     }

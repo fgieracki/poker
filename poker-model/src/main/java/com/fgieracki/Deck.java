@@ -43,7 +43,7 @@ public class Deck {
 
 
     /**
-     * @function shuffle() - shuffles the deck
+     *  shuffle() - shuffles the deck
      *
      */
     public void shuffle() {
@@ -54,7 +54,6 @@ public class Deck {
         }
     }
 
-    //cards getter
     public ArrayList<Card> getCards() {
         return cards;
     }
@@ -74,8 +73,6 @@ public class Deck {
         cards.remove(0);
         return topCard;
     }
-
-
 
     /**
      * function swap() - swaps two cards in the deck
