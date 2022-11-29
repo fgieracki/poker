@@ -67,12 +67,12 @@
   <testcase classname="com.fgieracki.HandValueTest" name="testStraight" time="0.001"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testTwoPair" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testFlush" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testPair" time="0.001"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testPair" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testFullHouse" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testHighCard" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testHighCard" time="0.001"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testRoyalFlush" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testStraightFlush" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testFourOfAKind" time="0.001"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testFourOfAKind" time="0"/>
   <testcase classname="com.fgieracki.HandValueTest" name="testGetHandValue" time="0"/>
-  <testcase classname="com.fgieracki.HandValueTest" name="testThreeOfAKind" time="0"/>
+  <testcase classname="com.fgieracki.HandValueTest" name="testThreeOfAKind" time="0.001"/>
 </testsuite>

@@ -22,7 +22,6 @@ public class ServerConnection implements Runnable {
 
     @Override
     public void run() {
-//        try {
             while (true) {
                 ByteBuffer serverResponse = ByteBuffer.allocate(BUFFER_SIZE);
 
@@ -47,8 +46,5 @@ public class ServerConnection implements Runnable {
                 logger.log(Level.INFO, msg);
 
             }
-//        } catch (IOException e) {
-//            logger.log(Level.INFO, e.getMessage());
-//        }
     }
 }

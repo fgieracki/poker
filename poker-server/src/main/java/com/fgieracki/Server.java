@@ -43,6 +43,8 @@ public class Server {
         }
 
         logger.log(Level.INFO, "starting server");
+        String msg = String.format("Max players: %d", maxPlayers);
+        logger.log(Level.INFO, msg);
 
         try {
             InetAddress hostIP = InetAddress.getLocalHost();
@@ -109,10 +111,10 @@ public class Server {
         // Register interest in reading this channel
         myClient.register(selector, SelectionKey.OP_READ);
         String message = connectedUsers.get(myClient) + " has joined the game. Players: "
-                + Integer.toString(usersCount) + "/maxPlayers";
+                + Integer.toString(usersCount) + "/" + maxPlayers;
         logger.log(Level.INFO, message);
         message = connectedUsers.get(myClient) + " has joined the game. \nPlayers: "
-                + Integer.toString(usersCount) + "/maxPlayers\n";
+                + Integer.toString(usersCount) + "/" + maxPlayers + "\n";
         sendToAllUsers(myClient, message);
         sendToUser(myClient, "Welcome to the poker game! \n" +
                 "Type '!ready <starting chips>' to start the game.");
@@ -129,7 +131,7 @@ public class Server {
             logger.log(Level.WARNING, e.getMessage());
             usersCount--;
             String msg = connectedUsers.get(myClient) + " has left the game. Players: "
-                    + Integer.toString(usersCount) + "/maxPlayers";
+                    + Integer.toString(usersCount) + "/"+maxPlayers;
             sendToAllUsersByPlayerId(-1, msg);
             logger.log(Level.INFO, msg);
             game.removePlayer(getPlayerId(myClient));
@@ -225,10 +227,12 @@ public class Server {
             }
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
                 firstBettingRound = false;
-                game.setPlayerTurn(game.getDealer() - 1);
+                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
+                    game.setPlayerTurn(game.getDealer());
+                } else game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(-1, "First betting round finished!\nStarting drawing round...");
                 sendToAllUsersByPlayerId(-1, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
-                sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())), "It's your turn! Type '!draw <card numbers>' to draw cards.");
+                sendToUserByPlayerId(game.getPlayerTurn(), "It's your turn! Type '!draw <card numbers>' to draw cards.");
                 drawRound = true;
             }
         }
@@ -241,7 +245,9 @@ public class Server {
             playerDraw(playerId, command);
             if (game.getDrawCounter() == game.playersPlaying()) {
                 drawRound = false;
-                game.setPlayerTurn(game.getDealer() - 1);
+                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
+                    game.setPlayerTurn(game.getDealer());
+                } else game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(playerId, "Drawing round finished!\nStarting second betting round...");
                 sendToAllUsersByPlayerId(playerId, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
                 secondBettingRound = true;
@@ -251,7 +257,7 @@ public class Server {
     }
 
     protected static void handleSingleWinner() {
-        sendToAllUsers(null, "\n\n\nPlayer " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!\n\n\n");
+        sendToAllUsersByPlayerId(-1, "\n\n\nPlayer " + Integer.toString(game.getPlayerTurn() + 1) + " won the game!\n\n\n");
         game.getWinner();
         gameStarted = false;
         firstBettingRound = false;
@@ -272,7 +278,9 @@ public class Server {
 
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
                 secondBettingRound = false;
-                game.setPlayerTurn(game.getDealer() - 1);
+                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
+                    game.setPlayerTurn(game.getDealer());
+                } else game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(playerId, "Second betting round finished!\nChecking winner...");
                 int winner = game.getWinner();
                 sendToAllUsersByPlayerId(playerId, "\n\n\n" + uselessPlayerString + Integer.toString(winner + 1) + " won the game!\n\n\n");
@@ -406,7 +414,7 @@ public class Server {
     protected static void playBigBlind() {
         while (!game.playBlind(game.getBigBlindValue())) {
             game.bet(game.getPlayerTurn(), Game.Decision.FOLD, 0);
-            sendToUser(Objects.requireNonNull(getUserByPlayerId(game.getPlayerTurn())),
+            sendToUserByPlayerId(game.getPlayerTurn(),
                     "You have been eliminated!");
             nextTurn();
         }
@@ -415,7 +423,6 @@ public class Server {
     }
 
     protected static void nextTurn() {
-        logger.log(Level.INFO, "Game started!");
         game.nextPlayerTurn();
         sendToAllUsersByPlayerId(game.getPlayerTurn(), uselessCurrentTurnPlayer
                 + Integer.toString(game.getPlayerTurn() + 1) + "\n");
@@ -423,9 +430,15 @@ public class Server {
     }
 
     protected static void sendPlayerInfoToUsers() {
-        connectedUsers.forEach((key, value) -> {
-            sendToUser(key, getPlayerInfo(getPlayerId(key)));
-        });
+       try {
+           connectedUsers.forEach((key, value) -> {
+               sendToUser(key, getPlayerInfo(getPlayerId(key)));
+           });
+       }
+         catch (Exception e) {
+              logger.log(Level.SEVERE, "Error while sending player info to users!");
+         }
+
     }
 
     protected static String getPlayerInfo(int playerId) {

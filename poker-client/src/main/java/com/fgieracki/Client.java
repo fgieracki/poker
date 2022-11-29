@@ -40,9 +40,12 @@ public class Client {
             }
             while (true) {
                 String inputString = keyboardReader.readLine();
+                if(inputString == null || inputString.equals("quit")) {
+                    myClient.close();
+                    break;
+                }
                 ByteBuffer myBuffer = ByteBuffer.wrap(inputString.getBytes());
                 myClient.write(myBuffer);
-                if (inputString.equals("exit")) break;
             }
 
 

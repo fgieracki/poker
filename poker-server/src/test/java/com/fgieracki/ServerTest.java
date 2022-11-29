@@ -6,7 +6,9 @@ public class ServerTest extends TestCase {
 
     public void testServerModules(){
         Server.game = new Game(10);
+        Server.maxPlayers = 4;
         Server.game.addPlayers(4);
+
         boolean error = false;
 
         Server.validateCommands(0, "!ready dasdasdas");
@@ -57,6 +59,5 @@ public class ServerTest extends TestCase {
         Server.validateCommands(0, "!bet");
         Server.validateCommands(0, "!!stop");
         assertEquals(170, Server.game.getPlayer(1).getChips());
-
     }
 }
