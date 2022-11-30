@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import static java.lang.Math.max;
 
 /**
- *  @author fgieracki
- *  @version 1.0
- *
  *  Player class
  *
  *        hand - array of cards
@@ -18,7 +15,6 @@ import static java.lang.Math.max;
  *
  *
  */
-
 public class Player{
     ArrayList<Card> hand;
     int chips;

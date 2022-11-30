@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import static java.lang.Math.max;
 
 /**
- * @author fgieracki
  * Game class
  * This class is responsible for the game logic
  * It contains the game state and the game logic
  *
  * @version 1.0
  */
-
 public class Game {
     private Deck deck;
     private final ArrayList<Player> players;
@@ -124,7 +122,7 @@ public class Game {
     /**
      *  tieBreaker - second selection of the potential winners,
      * bases on the highest cards in the hand
-     * @param winners
+     * @param winners - list of winners
      * @return - returns the winner of the game
      */
     private int tieBreaker(int[] winners){
@@ -162,7 +160,7 @@ public class Game {
     /**
      *  finalTieBreaker - third selection of the potential winners,
      * bases on the card Suits
-     * @param winners
+     * @param winners - list of potential winners
      * @return winnerId
      */
     private int finalTieBreaker(int[] winners){
@@ -259,7 +257,7 @@ public class Game {
     public void nextPlayerTurn(){
         do {
             playerTurn = (playerTurn + 1) % players.size();
-        } while(!checkIfPlayerIsPlaying(playerTurn) && playersPlaying() > 1);
+        } while(!checkIfPlayerIsPlaying(playerTurn) && playersPlaying() > 1 && playerTurn<=0);
 
     }
 

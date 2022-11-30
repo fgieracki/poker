@@ -50,7 +50,7 @@ Faza negocjacji:
 !bet fold - opuszczenie gry
 !bet allin - podbicie zakładu do maksymalnej posiadanej liczby chipsów
 
-W przypadku sukcesu, serwer zwróci komunikat potwierdzający ruch,a inni użytkownicy zobaczą komunikat o wykonanym ruchu.
+W przypadku sukcesu, serwer zwróci komunikat potwierdzający ruch, a inni użytkownicy zobaczą komunikat o wykonanym ruchu.
 W przypadku niepowodzenia, serwer zwróci komunikat o błędzie, wówczas do skutku należy powtarzać komendę.
 
 Faza dobierania kart:

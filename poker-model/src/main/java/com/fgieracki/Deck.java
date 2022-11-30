@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.*;
 
 /**
- * @author fgieracki
- * @version 1.0
- *
  * Deck class
  *
  *      cards - array of cards
@@ -27,7 +24,6 @@ import java.util.*;
  *              2 - Diamonds
  *              3 - Clubs
  */
-
 public class Deck {
     private final ArrayList<Card> cards;
     private Random rand = new Random();

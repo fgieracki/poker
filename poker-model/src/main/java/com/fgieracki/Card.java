@@ -3,9 +3,6 @@ package com.fgieracki;
 import java.util.Objects;
 
 /**
- * @author fgieracki
- * @version 1.0
- *
  * Card class
  *
  *        rank - rank of the card
@@ -28,8 +25,6 @@ import java.util.Objects;
  *  hashCode() - returns hash code of the card
  *
  */
-
-
 public class Card {
     private int rank;
     private int suit;

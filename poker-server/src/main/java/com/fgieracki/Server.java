@@ -227,9 +227,7 @@ public class Server {
             }
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
                 firstBettingRound = false;
-                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
-                    game.setPlayerTurn(game.getDealer());
-                } else game.nextPlayerTurn();
+                game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(-1, "First betting round finished!\nStarting drawing round...");
                 sendToAllUsersByPlayerId(-1, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
                 sendToUserByPlayerId(game.getPlayerTurn(), "It's your turn! Type '!draw <card numbers>' to draw cards.");
@@ -245,9 +243,7 @@ public class Server {
             playerDraw(playerId, command);
             if (game.getDrawCounter() == game.playersPlaying()) {
                 drawRound = false;
-                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
-                    game.setPlayerTurn(game.getDealer());
-                } else game.nextPlayerTurn();
+                game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(playerId, "Drawing round finished!\nStarting second betting round...");
                 sendToAllUsersByPlayerId(playerId, uselessCurrentTurnPlayer + Integer.toString(game.getPlayerTurn() + 1));
                 secondBettingRound = true;
@@ -278,9 +274,7 @@ public class Server {
 
             if (game.getPlayerTurn() == game.getLastPlayerAction()) {
                 secondBettingRound = false;
-                if(game.checkIfPlayerIsPlaying(game.getDealer())) {
-                    game.setPlayerTurn(game.getDealer());
-                } else game.nextPlayerTurn();
+                game.nextPlayerTurn();
                 sendToAllUsersByPlayerId(playerId, "Second betting round finished!\nChecking winner...");
                 int winner = game.getWinner();
                 sendToAllUsersByPlayerId(playerId, "\n\n\n" + uselessPlayerString + Integer.toString(winner + 1) + " won the game!\n\n\n");

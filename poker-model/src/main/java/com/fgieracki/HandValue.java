@@ -3,12 +3,9 @@ package com.fgieracki;
 import java.util.ArrayList;
 
 /**
- * @author fgieracki
- * @version 1.0
  *
  *         Class representing a hand value
  */
-
 public class HandValue {
     private int value;
     private final ArrayList<Card> hand;
