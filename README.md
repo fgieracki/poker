@@ -1,2 +1,10 @@
-# poker
-Poker with sockets made for Programowanie Zaawansowane 1, ISI 2, AGH UST
+# Java Poker (Console application)
+Application made for Advanced Programming 1 course, Computer Science and Intelligent Systems, AGH UST
+
+
+Author: Filip Gieracki
+
+### Technologies:
+- Java
+- JUnit
+- SonarQube
